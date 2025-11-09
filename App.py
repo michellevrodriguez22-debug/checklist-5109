@@ -1,4 +1,9 @@
 
+# app_5109_definitiva_v3.py
+# Versión extendida (≈500+ líneas): flujo INVIMA → cara frontal → cara posterior → condiciones → documentación
+# Sin herramientas interactivas. Con ejemplos en “Qué verificar” para Lote y Fecha. Referencias explícitas.
+# Evidencias por ítem y PDF horizontal con portada + evidencias en página nueva.
+
 import streamlit as st
 import pandas as pd
 import base64
@@ -10,24 +15,15 @@ from reportlab.lib.units import mm
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Image as RLImage
 
-# ============================================================
-# APP: Checklist de Rotulado General — Resolución 5109/2005
-# + Complementarias vigentes (solo cuando apliquen)
-# ============================================================
+# =========================================================
+# CONFIGURACIÓN INICIAL
+# =========================================================
+st.set_page_config(page_title="Checklist Rotulado — Resolución 5109/2005", layout="wide")
+st.title("Checklist de Rotulado — Resolución 5109 de 2005 (Colombia)")
 
-st.set_page_config(page_title="Checklist de Rotulado — Resolución 5109/2005", layout="wide")
-st.title("Checklist de Rotulado General — Resolución 5109 de 2005 (Colombia)")
-
-st.markdown(
-    "> Lista de verificación para rótulos de alimentos y materias primas **según la Resolución 5109 de 2005** "
-    "y referencias complementarias vigentes (p. ej., **Decreto 3075/1997** para habilitación y control sanitario, "
-    "**rótulo complementario** para importados). "
-    "⚠️ Este recurso **no** cubre la tabla nutricional ni los sellos frontales (eso está en tu app 810/2492)."
-)
-
-# -------------------------
-# Sidebar: datos generales
-# -------------------------
+# =========================================================
+# SIDEBAR (datos generales)
+# =========================================================
 st.sidebar.header("Datos de la verificación")
 producto = st.sidebar.text_input("Nombre del producto")
 proveedor = st.sidebar.text_input("Fabricante / Importador / Reenvasador")
@@ -39,147 +35,214 @@ invima_url = st.sidebar.text_input("URL de consulta INVIMA (opcional)")
 nombre_pdf = st.sidebar.text_input("Nombre del PDF (sin .pdf)", f"informe_5109_{datetime.now().strftime('%Y%m%d')}")
 solo_no = st.sidebar.checkbox("Mostrar solo 'No cumple'", value=False)
 
-# ------------------------------------------------------------
-# Definición de categorías e ítems (orden de revisión exigido)
-# ------------------------------------------------------------
+# =========================================================
+# ÍTEMS ORDENADOS (flujo real). Cada item: (titulo, que_verificar, referencia)
+# =========================================================
+
 CATEGORIAS = {
-    # 1. Empezar por el registro sanitario, como pidió el usuario
-    "1. Registro sanitario y datos legales": [
+    # -----------------------------------------------------
+    # 1. Verificación con INVIMA (registro sanitario)
+    # -----------------------------------------------------
+    "1. Verificación con INVIMA (registro sanitario)": [
         ("Registro sanitario impreso y legible en el empaque",
-         "El número INVIMA debe estar **impreso sobre el empaque**, visible, legible e indeleble. Aplica a producto terminado.",
-         "Res. 5109/2005 Art. 5.7; Dec. 3075/1997."),
+         "El número INVIMA debe estar **impreso sobre el empaque**, visible, legible e indeleble; aplica a producto terminado.",
+         "Resolución 5109/2005 Art. 5.7; Decreto 3075/1997."),
         ("Registro sanitario coincide con la consulta INVIMA (nombre/denominación/marca)",
-         "Verificar que la información del rótulo coincida con la ficha del registro en el portal INVIMA (nombre comercial/denominación, presentaciones autorizadas).",
-         "Res. 5109/2005 Art. 5.7; Dec. 3075/1997."),
+         "El rótulo debe coincidir con la ficha del registro (nombre comercial/denominación, presentaciones).",
+         "Resolución 5109/2005 Art. 5.7; Decreto 3075/1997."),
         ("Registro sanitario vigente y ACTIVO",
-         "Confirmar estado ACTIVO (no vencido/cancelado/suspendido) en el portal INVIMA.",
-         "Dec. 3075/1997 (control sanitario)."),
+         "Debe estar **ACTIVO** (no vencido, cancelado ni suspendido) según el portal INVIMA.",
+         "Decreto 3075/1997 (control sanitario)."),
+        ("Denominación del alimento coincidente con el registro",
+         "La denominación impresa en el rótulo debe coincidir con la reportada en la ficha INVIMA.",
+         "Resolución 5109/2005 Art. 5.1; Art. 5.7."),
         ("Nombre y dirección del responsable (fabricante/importador/reenvasador)",
-         "Indicar razón social y **dirección completa** del responsable declarado en el rótulo.",
-         "Res. 5109/2005 Art. 5.8."),
+         "Declarar razón social y **dirección completa** del responsable.",
+         "Resolución 5109/2005 Art. 5.8."),
         ("País de origen",
          "Declarar “Hecho en …” o “Producto de …” cuando aplique.",
-         "Res. 5109/2005 Art. 5.9."),
+         "Resolución 5109/2005 Art. 5.9."),
+        ("Presentación y contenido autorizados",
+         "La presentación (peso/volumen) declarada en el rótulo debe estar autorizada en el registro sanitario.",
+         "Resolución 5109/2005 Art. 5.7; práctica regulatoria (INVIMA)."),
     ],
 
-    # 2. Identificación visible del producto
-    "2. Identificación visible del producto": [
+    # -----------------------------------------------------
+    # 2. Revisión de la cara frontal del empaque
+    # -----------------------------------------------------
+    "2. Revisión de la cara frontal": [
         ("Denominación del alimento (verdadera naturaleza)",
-         "La denominación debe reflejar la **verdadera naturaleza** del producto; la marca **no** sustituye la denominación.",
-         "Res. 5109/2005 Art. 5.1 y 5.1.2."),
+         "Debe reflejar la **verdadera naturaleza** del producto; la marca **no** sustituye la denominación.",
+         "Resolución 5109/2005 Art. 5.1 y 5.1.2."),
         ("Marca comercial (no sustituye la denominación)",
-         "La marca puede acompañar, pero nunca reemplazar la denominación del alimento.",
-         "Res. 5109/2005 Art. 5.1.2."),
+         "La marca acompaña, pero nunca reemplaza la denominación del alimento.",
+         "Resolución 5109/2005 Art. 5.1.2."),
         ("Contenido neto en cara principal con unidades SI",
-         "Declarar contenido neto en la **cara principal de exhibición**, usando unidades del **SI** (g, kg, mL, L), legible y sin incluir el envase.",
-         "Res. 5109/2005 (Anexo de contenido neto) y Art. 3."),
+         "Declarar contenido neto en la **cara principal** de exhibición, usando **unidades SI** (g, kg, mL, L), legible y sin incluir el envase.",
+         "Resolución 5109/2005 (Anexo de contenido neto) y Art. 3."),
         ("Lote impreso en el empaque (trazabilidad)",
-         "El **lote** debe estar impreso en el empaque, legible e indeleble, para asegurar trazabilidad.",
-         "Res. 5109/2005 Art. 5.4."),
-        ("Fecha de vencimiento/duración mínima impresa",
-         "La fecha debe estar **impresa** en el empaque, legible y en formato claro (ej.: DD/MM/AAAA).",
-         "Res. 5109/2005 Art. 5.5."),
-        ("Condiciones de conservación y/o instrucciones de uso si aplica",
-         "Indicar condiciones especiales de conservación (p. ej., refrigeración) y uso/preparación cuando sean necesarias para seguridad/estabilidad.",
-         "Res. 5109/2005 Art. 5.6."),
+            "El **lote** debe estar impreso en el empaque, legible e indeleble, para trazabilidad. **Ejemplos de formato válido (referenciales):** "
+            "**L230401**, **LOT230401**, **230401A**.",
+            "Resolución 5109/2005 Art. 5.4."),
+        ("Fecha de vencimiento / duración mínima impresa",
+            "La fecha debe estar **impresa** en el empaque, legible y clara. **Ejemplos de formato válido (según caso):** "
+            "**DD/MM/AAAA**, **DD-MM-AAAA**, o **MMM/AAAA** (para duración mínima).",
+            "Resolución 5109/2005 Art. 5.5."),
+        ("Ubicación visible del rótulo (cara principal)",
+         "El rótulo debe estar en la **cara visible** al consumidor, sin obstrucciones mecánicas ni pliegues que dificulten la lectura.",
+         "Resolución 5109/2005 Art. 3."),
+        ("Afirmaciones de la cara principal no engañosas",
+         "La información y recursos gráficos de portada no deben inducir a error respecto de la naturaleza, composición o cualidades del alimento.",
+         "Resolución 5109/2005 Art. 4."),
+        ("Legibilidad de la cara principal",
+         "Textos, números y símbolos en la cara frontal deben ser legibles, indelebles y con contraste adecuado.",
+         "Resolución 5109/2005 Art. 4 y 6."),
     ],
 
-    # 3. Lista de ingredientes, aditivos y alérgenos
-    "3. Lista de ingredientes, aditivos y alérgenos": [
+    # -----------------------------------------------------
+    # 3. Revisión de la cara posterior / información general
+    # -----------------------------------------------------
+    "3. Revisión de la cara posterior / información general": [
         ("Lista de ingredientes en orden decreciente",
          "Listar **todos** los ingredientes en orden decreciente de peso al momento de fabricación (de mayor a menor).",
-         "Res. 5109/2005 Art. 5.2."),
+         "Resolución 5109/2005 Art. 5.2."),
         ("Aditivos alimentarios con función y nombre específico",
          "Declarar aditivos por **categoría funcional** y **nombre específico** (p. ej., Conservante (Sorbato de potasio)).",
-         "Res. 5109/2005 Art. 5.2.1."),
-        ("Declaración de alérgenos (lista o leyenda ‘Contiene: …’)",
-         "Indicar alérgenos cuando apliquen, p. ej.: gluten (trigo, cebada, centeno, avena), huevo, leche (incl. lactosa), soya, maní, frutos secos, pescado, crustáceos, mostaza, apio, sésamo, sulfitos ≥10 mg/kg.",
-         "Buenas prácticas y lineamientos de rotulado; Res. 5109/2005 Art. 5.2 (interpretación)."),
-    ],
-
-    # 4. Información al consumidor y presentación gráfica
-    "4. Información al consumidor y presentación": [
+         "Resolución 5109/2005 Art. 5.2.1."),
+        ("Ingredientes compuestos (declaración desglosada)",
+         "Si se usan ingredientes compuestos (p. ej., chocolate), listar sus componentes entre paréntesis cuando corresponda.",
+         "Resolución 5109/2005 Art. 5.2 (interpretación)."),
+        ("Aditivos con límites específicos (cuando aplique)",
+         "Si el aditivo posee límites de uso, verificar su pertinencia con la ficha técnica y especificación del producto.",
+         "Resolución 5109/2005 Art. 5.2.1; fichas técnicas vigentes."),
+        ("Declaración de alérgenos",
+         "Indicar alérgenos cuando apliquen: gluten (trigo/cebada/centeno/avena), huevo, leche (incl. lactosa), soya, maní, frutos secos, pescado, crustáceos, mostaza, apio, sésamo, sulfitos ≥10 mg/kg.",
+         "Resolución 5109/2005 Art. 5.2 (interpretación y buenas prácticas)."),
+        ("Prioridad visual suficiente para ingredientes y alérgenos",
+         "La lista de ingredientes y la declaración de alérgenos deben ser legibles, sin ser ocultadas por otros elementos gráficos.",
+         "Resolución 5109/2005 Art. 4 y 6."),
+        ("Condiciones de conservación (cuando corresponda)",
+         "Declarar condiciones especiales de conservación para preservar inocuidad y vida útil (p. ej., “Manténgase refrigerado a 4 °C”).",
+         "Resolución 5109/2005 Art. 5.6."),
+        ("Instrucciones de uso/preparación (cuando corresponda)",
+         "Incluir instrucciones necesarias para el uso seguro y adecuado del producto (p. ej., “Agítese antes de usar”).",
+         "Resolución 5109/2005 Art. 5.6."),
         ("Idioma en español (rótulo complementario si es importado)",
-         "Toda la información obligatoria debe estar **en español**; para importados se permite **rótulo complementario adherido** con la traducción completa.",
-         "Res. 5109/2005 Art. 5 (información en español)."),
-        ("Legibilidad, indelebilidad y contraste",
-         "Textos legibles e indelebles, con contraste suficiente y sin ocultar información por pliegues/sellos.",
-         "Res. 5109/2005 Art. 4 y 6."),
-        ("No inducir a error",
-         "Evitar frases, imágenes o símbolos que atribuyan propiedades que el alimento no tiene o conlleven a confusión.",
-         "Res. 5109/2005 Art. 4."),
-        ("Ubicación del rótulo (cara visible)",
-         "El rótulo debe estar en la **cara visible** al consumidor sin obstrucciones.",
-         "Res. 5109/2005 Art. 3."),
+         "Toda la información obligatoria debe estar **en español**; para importados se permite **rótulo complementario** adherido con la traducción completa.",
+         "Resolución 5109/2005 Art. 5."),
+        ("No inducir a error (cara posterior)",
+         "La información posterior tampoco debe inducir a error sobre la naturaleza/composición/beneficios del alimento.",
+         "Resolución 5109/2005 Art. 4."),
+        ("Legibilidad e indelebilidad general",
+         "Textos, cifras y símbolos deben ser indelebles, con contraste suficiente y legibles en condiciones normales de compra.",
+         "Resolución 5109/2005 Art. 4 y 6."),
+        ("Ubicación del rótulo (información posterior)",
+         "La información debe estar dispuesta en zonas visibles y accesibles del envase.",
+         "Resolución 5109/2005 Art. 3."),
     ],
 
-    # 5. Regímenes particulares por situación de producto
-    "5. Condiciones particulares": [
-        ("Productos importados — rótulo complementario",
-         "Cuando la etiqueta original no esté en español o falte información obligatoria, adherir rótulo complementario con los datos exigidos.",
-         "Res. 5109/2005 Art. 5 (español); práctica regulatoria vigente."),
-        ("Productos reenvasados",
+    # -----------------------------------------------------
+    # 4. Condiciones particulares (situaciones especiales)
+    # -----------------------------------------------------
+    "4. Condiciones particulares": [
+        ("Producto importado — rótulo complementario",
+         "Si la etiqueta original no está en español o falta información obligatoria, adherir rótulo complementario con los datos exigidos.",
+         "Resolución 5109/2005 Art. 5 (español)."),
+        ("Producto reenvasado (en establecimiento autorizado)",
          "Conservar la información original e incluir **responsable del reenvasado** con dirección.",
-         "Res. 5109/2005 Art. 3 y 4."),
+         "Resolución 5109/2005 Art. 3 y 4; Decreto 3075/1997."),
         ("Venta a granel / fraccionados",
          "Exhibir información mínima mediante rótulos/carteles (denominación, ingredientes cuando aplique, responsable, país de origen, lote/fecha en envase inmediato, etc.).",
-         "Res. 5109/2005 (principios de información al consumidor)."),
+         "Resolución 5109/2005 (principios de información al consumidor)."),
         ("Envases muy pequeños (limitaciones de espacio)",
-         "Si el área impide toda la información en el envase, usar medios alternos complementarios (pliegos, insertos o rótulo adicional) sin omitir lo esencial.",
-         "Criterio práctico alineado con 5109/2005 (visibilidad y legibilidad)."),
+         "Si el área impide toda la información, usar medios complementarios (pliegos, insertos, rótulos adicionales) sin omitir lo esencial.",
+         "Criterio práctico alineado con 5109/2005 (visibilidad/legibilidad)."),
+        ("Multipacks o envases secundarios",
+         "Cuando aplique, el envase secundario debe repetir la información esencial o remitir claramente a la existente en el envase primario.",
+         "Criterio práctico y lineamientos de información al consumidor."),
+        ("Promociones/obsequios adheridos",
+         "Evitar que elementos promocionales oculten información obligatoria del rótulo.",
+         "Resolución 5109/2005 Art. 4 (no inducir a error) y Art. 6 (legibilidad)."),
     ],
 
-    # 6. Documentación de soporte
-    "6. Control y evidencia documental": [
+    # -----------------------------------------------------
+    # 5. Evidencia documental y control
+    # -----------------------------------------------------
+    "5. Evidencia documental y control": [
         ("Soportes regulatorios disponibles",
          "Disponer de registro sanitario, contratos de maquila/reenvasado, certificados de origen y demás soportes.",
-         "Dec. 3075/1997 (habilitación/control)."),
+         "Decreto 3075/1997 (habilitación y control)."),
         ("Fichas técnicas y especificaciones",
          "Fichas de materias primas y producto final actualizadas, coherentes con lo declarado.",
          "Buenas prácticas de calidad."),
         ("Control de cambios del arte de etiqueta",
          "Historial de versiones y aprobaciones internas del arte del rótulo.",
          "Buenas prácticas documentales."),
-    ]
+        ("Coherencia documental vs rótulo",
+         "La información del rótulo debe ser coherente con fichas técnicas, especificaciones, acuerdos con proveedor y análisis disponibles.",
+         "Buenas prácticas de aseguramiento de calidad."),
+        ("Evidencia de revisión periódica de artes",
+         "Demostrar revisión periódica (y tras cambios regulatorios) de los artes de etiqueta antes de impresión/lanzamiento.",
+         "Buenas prácticas de cumplimiento regulatorio."),
+    ],
 }
 
+# =========================================================
+# Mapa de aplicabilidad visible
+# =========================================================
 APLICA = {
-    # Por claridad, mapeo aproximado
+    # 1. INVIMA
     "Registro sanitario impreso y legible en el empaque": "Producto terminado",
     "Registro sanitario coincide con la consulta INVIMA (nombre/denominación/marca)": "Producto terminado",
     "Registro sanitario vigente y ACTIVO": "Producto terminado",
+    "Denominación del alimento coincidente con el registro": "Producto terminado",
     "Nombre y dirección del responsable (fabricante/importador/reenvasador)": "Ambos",
     "País de origen": "Ambos",
+    "Presentación y contenido autorizados": "Producto terminado",
 
+    # 2. Cara frontal
     "Denominación del alimento (verdadera naturaleza)": "Ambos",
     "Marca comercial (no sustituye la denominación)": "Ambos",
     "Contenido neto en cara principal con unidades SI": "Producto terminado",
     "Lote impreso en el empaque (trazabilidad)": "Ambos",
-    "Fecha de vencimiento/duración mínima impresa": "Ambos",
-    "Condiciones de conservación y/o instrucciones de uso si aplica": "Producto terminado",
+    "Fecha de vencimiento / duración mínima impresa": "Ambos",
+    "Ubicación visible del rótulo (cara principal)": "Ambos",
+    "Afirmaciones de la cara principal no engañosas": "Ambos",
+    "Legibilidad de la cara principal": "Ambos",
 
+    # 3. Posterior
     "Lista de ingredientes en orden decreciente": "Producto terminado",
     "Aditivos alimentarios con función y nombre específico": "Ambos",
-    "Declaración de alérgenos (lista o leyenda ‘Contiene: …’)": "Producto terminado",
-
+    "Ingredientes compuestos (declaración desglosada)": "Producto terminado",
+    "Aditivos con límites específicos (cuando aplique)": "Producto terminado",
+    "Declaración de alérgenos": "Producto terminado",
+    "Prioridad visual suficiente para ingredientes y alérgenos": "Producto terminado",
+    "Condiciones de conservación (cuando corresponda)": "Producto terminado",
+    "Instrucciones de uso/preparación (cuando corresponda)": "Producto terminado",
     "Idioma en español (rótulo complementario si es importado)": "Ambos",
-    "Legibilidad, indelebilidad y contraste": "Ambos",
-    "No inducir a error": "Ambos",
-    "Ubicación del rótulo (cara visible)": "Ambos",
+    "No inducir a error (cara posterior)": "Ambos",
+    "Legibilidad e indelebilidad general": "Ambos",
+    "Ubicación del rótulo (información posterior)": "Ambos",
 
-    "Productos importados — rótulo complementario": "Producto terminado",
-    "Productos reenvasados": "Producto terminado",
+    # 4. Particulares
+    "Producto importado — rótulo complementario": "Producto terminado",
+    "Producto reenvasado (en establecimiento autorizado)": "Producto terminado",
     "Venta a granel / fraccionados": "Producto terminado",
     "Envases muy pequeños (limitaciones de espacio)": "Producto terminado",
+    "Multipacks o envases secundarios": "Producto terminado",
+    "Promociones/obsequios adheridos": "Producto terminado",
 
+    # 5. Documental
     "Soportes regulatorios disponibles": "Ambos",
     "Fichas técnicas y especificaciones": "Ambos",
     "Control de cambios del arte de etiqueta": "Ambos",
+    "Coherencia documental vs rótulo": "Ambos",
+    "Evidencia de revisión periódica de artes": "Ambos",
 }
 
-# -------------------------
-# Estado, notas y evidencias
-# -------------------------
+# =========================================================
+# ESTADO / NOTAS / EVIDENCIAS
+# =========================================================
 if "status_5109" not in st.session_state:
     st.session_state.status_5109 = {i[0]: "none" for c in CATEGORIAS.values() for i in c}
 if "note_5109" not in st.session_state:
@@ -193,9 +256,9 @@ def split_obs(text: str, chunk: int = 110) -> str:
     s = str(text)
     return "\\n".join([s[i:i+chunk] for i in range(0, len(s), chunk)])
 
-# -------------------------
-# Render: checklist por ítem
-# -------------------------
+# =========================================================
+# RENDER DEL CHECKLIST
+# =========================================================
 st.header("Checklist por etapas (5109/2005)")
 st.markdown("Responde con ✅ Cumple / ❌ No cumple / ⚪ No aplica. Si marcas **No cumple**, podrás **adjuntar evidencia**.")
 
@@ -211,7 +274,7 @@ for categoria, items in CATEGORIAS.items():
         st.markdown(f"**Referencia normativa:** {referencia}")
         st.caption(f"Aplica a: {APLICA.get(titulo, 'Ambos')}")
 
-        # Botonera estado
+        # Botonera de estado
         c1, c2, c3, _ = st.columns([0.12, 0.12, 0.12, 0.64])
         with c1:
             if st.button("✅ Cumple", key=f"{titulo}_yes"):
@@ -234,72 +297,11 @@ for categoria, items in CATEGORIAS.items():
         else:
             st.markdown("<div style='background:#fff;padding:6px;border-radius:5px;'>Sin responder</div>", unsafe_allow_html=True)
 
-        # -----------------------------
-        # Herramientas en cuadros azules
-        # -----------------------------
-        if titulo in ["Lote impreso en el empaque (trazabilidad)", "Fecha de vencimiento/duración mínima impresa"]:
-            st.markdown("<div style='background:#e6f0ff;padding:10px;border-radius:8px;'><b>Herramienta:</b> Validador rápido de formato.</div>", unsafe_allow_html=True)
-            colf1, colf2 = st.columns(2)
-            with colf1:
-                lote = st.text_input("Ejemplo de lote impreso (opcional)", key=f"lote_{titulo}")
-                if lote:
-                    st.caption("Sugerencia: usar códigos alfanuméricos claros; evitar zonas de borra/abrasión.")
-            with colf2:
-                fecha_txt = st.text_input("Ejemplo de fecha impresa (opcional)", key=f"fecha_{titulo}")
-                if fecha_txt:
-                    ok = False
-                    for fmt in ["%d/%m/%Y", "%d-%m-%Y", "%Y-%m-%d", "%b/%Y", "%m/%Y"]:
-                        try:
-                            _ = datetime.strptime(fecha_txt, fmt)
-                            ok = True
-                            break
-                        except Exception:
-                            pass
-                    if ok:
-                        st.success("Formato legible reconocido (ejemplo válido).")
-                    else:
-                        st.warning("No se reconoce un formato estándar (p. ej., DD/MM/AAAA).")
-
-        if titulo == "Contenido neto en cara principal con unidades SI":
-            st.markdown("<div style='background:#e6f0ff;padding:10px;border-radius:8px;'><b>Herramienta:</b> Verifica la unidad y presencia en cara principal.</div>", unsafe_allow_html=True)
-            colu1, colu2 = st.columns(2)
-            with colu1:
-                unidad = st.selectbox("Unidad declarada", ["g", "kg", "mL", "L", "otra"], key="u_si")
-                cara = st.radio("¿Está en cara principal de exhibición?", ["Sí", "No"], index=0, key="cara_si")
-            with colu2:
-                if unidad in ["g", "kg", "mL", "L"] and cara == "Sí":
-                    st.success("✅ Unidad SI correcta en cara principal.")
-                else:
-                    st.error("⚠️ Revise unidad (SI) y/o ubicación en cara principal.")
-
-        if titulo == "Declaración de alérgenos (lista o leyenda ‘Contiene: …’)":
-            st.markdown("<div style='background:#e6f0ff;padding:10px;border-radius:8px;'><b>Ayuda:</b> Marque si están declarados alérgenos comunes.</div>", unsafe_allow_html=True)
-            cols = st.columns(3)
-            alergs = [
-                "Gluten (trigo/cebada/centeno/avena)", "Huevo", "Leche (incl. lactosa)",
-                "Soya", "Maní", "Frutos secos", "Pescado", "Crustáceos",
-                "Mostaza", "Apio", "Sésamo", "Sulfitos (≥10 mg/kg)"
-            ]
-            checks = {}
-            for i, a in enumerate(alergs):
-                with cols[i % 3]:
-                    checks[a] = st.checkbox(a, key=f"al_{a}")
-            declarados = [k for k,v in checks.items() if v]
-            if declarados:
-                st.info("Declarados: " + ", ".join(declarados))
-            else:
-                st.caption("No marcados.")
-
-        if titulo == "Productos importados — rótulo complementario":
-            st.markdown("<div style='background:#e6f0ff;padding:10px;border-radius:8px;'>"
-                        "<b>Checklist rótulo complementario:</b> adherido, completo en español, legible, "
-                        "sin cubrir información crítica; incluir denominación, ingredientes, responsable, país de origen, "
-                        "lote y fecha impresos.</div>", unsafe_allow_html=True)
-
-        # Observación + Evidencia
+        # Observación
         nota = st.text_area("Observación (opcional)", value=st.session_state.note_5109.get(titulo, ""), key=f"{titulo}_nota")
         st.session_state.note_5109[titulo] = nota
 
+        # Evidencia (solo si No cumple)
         if st.session_state.status_5109[titulo] == "no":
             st.markdown("**Adjunta evidencia (JPG/PNG):**")
             files = st.file_uploader("Subir imágenes", type=["jpg","jpeg","png"], accept_multiple_files=True, key=f"upl_{titulo}")
@@ -324,9 +326,9 @@ for categoria, items in CATEGORIAS.items():
 
         st.markdown("---")
 
-# -----------------
-# Métricas de avance
-# -----------------
+# =========================================================
+# MÉTRICAS
+# =========================================================
 yes_count = sum(1 for v in st.session_state.status_5109.values() if v == "yes")
 no_count = sum(1 for v in st.session_state.status_5109.values() if v == "no")
 answered_count = yes_count + no_count
@@ -338,10 +340,10 @@ st.write(
     f"SIN RESPONDER: {sum(1 for v in st.session_state.status_5109.values() if v == 'none')}"
 )
 
-# -----------------
-# Generación de PDF
-# -----------------
-def split_obs_pdf(text: str, chunk: int = 100) -> str:
+# =========================================================
+# PDF (A4 horizontal) + evidencias
+# =========================================================
+def split_obs_pdf(text: str, chunk: int = 110) -> str:
     if not text:
         return ""
     s = str(text)
@@ -374,10 +376,8 @@ def generar_pdf():
         portada += f" &nbsp;&nbsp; <b>Consulta:</b> {invima_url}"
     story.append(Paragraph(portada, style_header))
     story.append(Spacer(1, 4*mm))
-    story.append(Paragraph("Este informe cubre la verificación de rotulado general exigida por la Resolución 5109 de 2005 y referencias complementarias vigentes.", style_header))
-    story.append(Spacer(1, 5*mm))
 
-    # Tabla de resultados
+    # Tabla principal
     data = [["Ítem", "Estado", "Observación", "Referencia"]]
     for items in CATEGORIAS.values():
         for (titulo, _, referencia) in items:
@@ -391,25 +391,25 @@ def generar_pdf():
             obs = st.session_state.note_5109.get(titulo, "") or "-"
             obs = "-" if not obs else split_obs_pdf(obs, 110)
             data.append([
-                Paragraph(str(titulo),          style_cell),
-                Paragraph(str(estado_humano),   style_cell),
-                Paragraph(obs,                  style_cell),
-                Paragraph(str(referencia),      style_cell),
+                Paragraph(str(titulo),        style_cell),
+                Paragraph(str(estado_humano), style_cell),
+                Paragraph(obs,                style_cell),
+                Paragraph(str(referencia),    style_cell),
             ])
 
-    tbl = Table(data, colWidths=[100*mm, 25*mm, 85*mm, 55*mm], repeatRows=1)
+    tbl = Table(data, colWidths=[105*mm, 25*mm, 80*mm, 55*mm], repeatRows=1)
     tbl.setStyle(TableStyle([
         ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#f2f2f2")),
-        ("FONTNAME",   (0,0), (-1,0), "Helvetica-Bold"),
-        ("FONTSIZE",   (0,0), (-1,0), 9),
-        ("GRID",       (0,0), (-1,-1), 0.25, colors.grey),
-        ("VALIGN",     (0,0), (-1,-1), "TOP"),
+        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
+        ("FONTSIZE", (0,0), (-1,0), 9),
+        ("GRID", (0,0), (-1,-1), 0.25, colors.grey),
+        ("VALIGN", (0,0), (-1,-1), "TOP"),
         ("LEFTPADDING",(0,0), (-1,-1), 3),
         ("RIGHTPADDING",(0,0), (-1,-1), 3),
     ]))
     story.append(tbl)
 
-    # Evidencias en página nueva
+    # Evidencias (página nueva)
     any_ev = any(len(v) > 0 for v in st.session_state.evidence_5109.values())
     if any_ev:
         story.append(PageBreak())
@@ -436,11 +436,11 @@ def generar_pdf():
     buf.seek(0)
     return buf
 
-# --------------
-# Botón PDF
-# --------------
+# =========================================================
+# EXPORTAR PDF
+# =========================================================
 st.subheader("Generar informe PDF (A4 horizontal)")
 if st.button("Generar PDF"):
-    pdf = generar_pdf()
+    pdf_buffer = generar_pdf()
     file_name = (nombre_pdf.strip() or f"informe_5109_{datetime.now().strftime('%Y%m%d')}") + ".pdf"
-    st.download_button("Descargar PDF", data=pdf, file_name=file_name, mime="application/pdf")
+    st.download_button("Descargar PDF", data=pdf_buffer, file_name=file_name, mime="application/pdf")
