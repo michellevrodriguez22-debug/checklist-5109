@@ -1,14 +1,14 @@
 
-# app_5109_definitiva_v4_final.py
-# Resolución 5109/2005 — Checklist integral, flujo ordenado y depurado
+# app_5109_definitiva_v5.py
+# Resolución 5109/2005 — Checklist integral (v5)
 # - Flujo: INVIMA → Cara frontal → Cara posterior → Condiciones → Documentación
-# - Sin herramientas ni calculadoras
-# - Ejemplos de formato para Lote y Fecha en “Qué verificar”
+# - Sin herramientas/calculadoras
+# - Ejemplos para Lote y Fecha en “Qué verificar”
 # - Criterios de legibilidad/veracidad unificados
-# - Ítems redundantes eliminados (revisión periódica de artes / control de cambios)
-# - “Soportes regulatorios disponibles” modificado según indicación
-#
-# Autor: Generado para Michelle Rodríguez — 2025-11-09
+# - Ítem duplicado removido
+# - Responsable ampliado (teléfono, web y “Elaborado para/Por”)
+# - Nuevo ítem: “Modo de consumo o instrucciones de consumo”
+# - PDF horizontal con portada (v5) y evidencias en página nueva
 
 import streamlit as st
 import base64
@@ -20,53 +20,52 @@ from reportlab.lib.units import mm
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Image as RLImage
 
-# ==============================
-# CONFIGURACIÓN INICIAL
-# ==============================
-st.set_page_config(page_title="Checklist Rotulado — Resolución 5109/2005 (v4 final)", layout="wide")
-st.title("Checklist de Rotulado — Resolución 5109 de 2005 (Colombia) — Versión 4 FINAL")
+# ===========================================
+# CONFIG INICIAL
+# ===========================================
+st.set_page_config(page_title="Checklist Rotulado — Resolución 5109/2005 (v5)", layout="wide")
+st.title("Checklist de Rotulado — Resolución 5109 de 2005 (Colombia) — Versión 5")
 
-# ==============================
-# SIDEBAR (datos generales)
-# ==============================
+# ===========================================
+# SIDEBAR / DATOS GENERALES
+# ===========================================
 st.sidebar.header("Datos de la verificación")
-producto = st.sidebar.text_input("Nombre del producto")
-proveedor = st.sidebar.text_input("Fabricante / Importador / Reenvasador")
-responsable = st.sidebar.text_input("Responsable de la verificación")
-fecha_verif = st.sidebar.text_input("Fecha del informe (AAAA-MM-DD)", datetime.now().strftime("%Y-%m-%d"))
-invima_registro = st.sidebar.text_input("Registro sanitario INVIMA (producto terminado)")
-invima_estado_activo = st.sidebar.checkbox("Verificado ACTIVO y coincidente en el portal INVIMA", value=False)
-invima_url = st.sidebar.text_input("URL de consulta INVIMA (opcional)")
-nombre_pdf = st.sidebar.text_input("Nombre del PDF (sin .pdf)", f"informe_5109_v4_{datetime.now().strftime('%Y%m%d')}")
-solo_no = st.sidebar.checkbox("Mostrar solo 'No cumple'", value=False)
+producto   = st.sidebar.text_input("Nombre del producto")
+proveedor  = st.sidebar.text_input("Fabricante / Importador / Reenvasador")
+responsable= st.sidebar.text_input("Responsable de la verificación")
+fecha_verif= st.sidebar.text_input("Fecha del informe (AAAA-MM-DD)", datetime.now().strftime("%Y-%m-%d"))
+invima_registro     = st.sidebar.text_input("Registro sanitario INVIMA (producto terminado)")
+invima_estado_activo= st.sidebar.checkbox("Verificado ACTIVO y coincidente en el portal INVIMA", value=False)
+invima_url          = st.sidebar.text_input("URL de consulta INVIMA (opcional)")
+nombre_pdf          = st.sidebar.text_input("Nombre del PDF (sin .pdf)", f"informe_5109_v5_{datetime.now().strftime('%Y%m%d')}")
+solo_no             = st.sidebar.checkbox("Mostrar solo 'No cumple'", value=False)
 
-# ==============================
-# ÍTEMS ORDENADOS (flujo real)
-# Cada tupla: (titulo, que_verificar, referencia, aplica_a)
-# ==============================
+# ===========================================
+# CHECKLIST — CATEGORÍAS E ÍTEMS
+#  Cada ítem: (titulo, que_verificar, referencia, aplica)
+# ===========================================
 CATEGORIAS = {
-    # 1) INVIMA primero
+    # 1) INVIMA
     "1. Verificación con INVIMA (registro sanitario)": [
         ("Registro sanitario impreso y legible en el empaque",
          "El número INVIMA debe estar impreso sobre el empaque, visible, legible e indeleble; aplica a producto terminado.",
          "Resolución 5109/2005 Art. 5.7; Decreto 3075/1997.", "Producto terminado"),
         ("Registro sanitario coincide con la consulta INVIMA (nombre/denominación/marca)",
-         "El rótulo debe coincidir con la ficha del registro (nombre/denominación, marca y presentaciones).",
+         "El rótulo debe coincidir con la ficha del registro (nombre/denominación, marca, presentaciones).",
          "Resolución 5109/2005 Art. 5.7; Decreto 3075/1997.", "Producto terminado"),
         ("Registro sanitario vigente y ACTIVO",
          "Debe estar ACTIVO (no vencido/cancelado/suspendido) según el portal INVIMA.",
          "Decreto 3075/1997 (control sanitario).", "Producto terminado"),
-        ("Denominación del alimento coincidente con el registro",
-         "La denominación impresa en el rótulo debe coincidir con la reportada en la ficha INVIMA.",
-         "Resolución 5109/2005 Art. 5.1; Art. 5.7.", "Producto terminado"),
         ("Nombre y dirección del responsable (fabricante/importador/reenvasador)",
-         "Declarar razón social y dirección completa del responsable.",
+         "Declarar razón social, dirección completa, teléfono y página web del responsable. "
+         "Si el producto se fabrica para otra empresa, incluir expresamente: "
+         "‘Elaborado para: [nombre]’ y ‘Por: [nombre del fabricante]’.",
          "Resolución 5109/2005 Art. 5.8.", "Ambos"),
         ("País de origen",
          "Declarar “Hecho en …” o “Producto de …” cuando aplique.",
          "Resolución 5109/2005 Art. 5.9.", "Ambos"),
         ("Presentación y contenido autorizados",
-         "La presentación (peso/volumen) declarada en el rótulo debe estar autorizada en el registro sanitario.",
+         "La presentación (peso/volumen) declarada debe estar autorizada en el registro sanitario.",
          "Resolución 5109/2005 Art. 5.7.", "Producto terminado"),
     ],
 
@@ -79,14 +78,16 @@ CATEGORIAS = {
          "Declarar contenido neto en la cara principal, usando unidades SI (g, kg, mL, L), legible y sin incluir el envase.",
          "Resolución 5109/2005 Art. 3 y Anexo.", "Producto terminado"),
         ("Lote impreso en el empaque (trazabilidad)",
-         "Debe estar impreso, legible e indeleble. Ejemplos de formato válido (referenciales): L230401, LOT230401, 230401A.",
+         "Debe estar impreso, legible e indeleble. Ejemplos de formato válido (referenciales): "
+         "L230401, LOT230401, 230401A.",
          "Resolución 5109/2005 Art. 5.4.", "Ambos"),
         ("Fecha de vencimiento o duración mínima impresa",
-         "Debe ser clara y legible. Ejemplos de formato válido (según caso): DD/MM/AAAA, DD-MM-AAAA, o MMM/AAAA (duración mínima).",
+         "Debe ser clara y legible. Ejemplos de formato válido (según caso): "
+         "DD/MM/AAAA, DD-MM-AAAA, o MMM/AAAA (duración mínima).",
          "Resolución 5109/2005 Art. 5.5.", "Ambos"),
     ],
 
-    # 3) Cara posterior / general
+    # 3) Cara posterior
     "3. Revisión de la cara posterior": [
         ("Lista de ingredientes en orden decreciente",
          "Listar todos los ingredientes en orden decreciente de peso al momento de fabricación.",
@@ -95,13 +96,18 @@ CATEGORIAS = {
          "Declarar aditivos con categoría funcional y nombre específico (p. ej., Conservante (Sorbato de potasio)).",
          "Resolución 5109/2005 Art. 5.2.1.", "Ambos"),
         ("Declaración de alérgenos",
-         "Indicar alérgenos cuando apliquen: gluten (trigo/cebada/centeno/avena), huevo, leche (incl. lactosa), soya, maní, frutos secos, pescado, crustáceos, mostaza, apio, sésamo, sulfitos ≥10 mg/kg.",
+         "Indicar alérgenos cuando apliquen: gluten (trigo/cebada/centeno/avena), huevo, leche (incl. lactosa), "
+         "soya, maní, frutos secos, pescado, crustáceos, mostaza, apio, sésamo, sulfitos ≥10 mg/kg.",
          "Resolución 5109/2005 Art. 5.2 (interpretación).", "Producto terminado"),
         ("Condiciones de conservación (cuando corresponda)",
          "Declarar condiciones especiales de conservación para preservar inocuidad y vida útil (p. ej., refrigeración a 4 °C).",
          "Resolución 5109/2005 Art. 5.6.", "Producto terminado"),
         ("Instrucciones de uso/preparación (cuando corresponda)",
-         "Incluir instrucciones necesarias para el uso seguro y adecuado del producto (p. ej., “Agítese antes de usar”).",
+         "Incluir instrucciones necesarias para el uso seguro y adecuado (p. ej., “Agítese antes de usar”).",
+         "Resolución 5109/2005 Art. 5.6.", "Producto terminado"),
+        ("Modo de consumo o instrucciones de consumo",
+         "Indicar la forma adecuada de consumo cuando aplique (p. ej., ‘Listo para consumir’, ‘Servir frío’, "
+         "‘Agregar agua antes de usar’, ‘Porción sugerida’).",
          "Resolución 5109/2005 Art. 5.6.", "Producto terminado"),
         ("Idioma en español (o rótulo complementario si es importado)",
          "Toda la información obligatoria debe estar en español; en importados, adherir rótulo complementario traducido.",
@@ -111,7 +117,8 @@ CATEGORIAS = {
     # 4) Claridad / Legibilidad / Veracidad — Unificado
     "4. Claridad, legibilidad y veracidad de la información": [
         ("Claridad, legibilidad y veracidad del rótulo",
-         "Toda la información del rótulo (frontal y posterior) debe ser legible, indeleble y veraz, sin inducir a error sobre naturaleza, composición, cantidad o características. Incluye ubicación visible y contraste adecuado.",
+         "Toda la información del rótulo (frontal y posterior) debe ser legible, indeleble y veraz, sin inducir a error "
+         "sobre naturaleza, composición, cantidad o características. Incluye ubicación visible y contraste adecuado.",
          "Resolución 5109/2005 Art. 3, 4 y 6.", "Ambos"),
     ],
 
@@ -124,7 +131,8 @@ CATEGORIAS = {
          "Conservar la información original e incluir responsable del reenvasado con dirección.",
          "Resolución 5109/2005 Art. 3 y 4; Decreto 3075/1997.", "Producto terminado"),
         ("Venta a granel o fraccionados",
-         "Exhibir información mínima mediante cartel/rótulo: denominación, ingredientes (si aplica), responsable, país de origen, lote y fecha en envase inmediato.",
+         "Exhibir información mínima mediante cartel/rótulo: denominación, ingredientes (si aplica), responsable, país de origen, "
+         "lote y fecha en envase inmediato.",
          "Resolución 5109/2005 (principios de información al consumidor).", "Producto terminado"),
         ("Envases muy pequeños (limitación de espacio)",
          "Usar medios complementarios (insertos/etiquetas adicionales) si el espacio no permite toda la información esencial.",
@@ -137,7 +145,8 @@ CATEGORIAS = {
     # 6) Evidencia documental y control
     "6. Evidencia documental y control": [
         ("Soportes regulatorios disponibles",
-         "Confirmar si el proveedor cuenta con ficha técnica, análisis bromatológicos, estudio de vida útil, arte aprobado y registro sanitario; verificar que todos coincidan entre sí y con el producto evaluado, según aplique.",
+         "Confirmar si el proveedor cuenta con ficha técnica, análisis bromatológicos, estudio de vida útil, arte aprobado y registro sanitario; "
+         "verificar que todos coincidan entre sí y con el producto evaluado, según aplique.",
          "Decreto 3075/1997 (habilitación y control); Buenas prácticas de calidad.", "Ambos"),
         ("Fichas técnicas y especificaciones",
          "Asegurar que las fichas estén actualizadas y coherentes con lo declarado en el rótulo.",
@@ -148,15 +157,15 @@ CATEGORIAS = {
     ],
 }
 
-# ==============================
-# ESTADOS / NOTAS / EVIDENCIAS
-# ==============================
-if "status_5109_v4" not in st.session_state:
-    st.session_state.status_5109_v4 = {i[0]: "none" for c in CATEGORIAS.values() for i in c}
-if "note_5109_v4" not in st.session_state:
-    st.session_state.note_5109_v4 = {i[0]: "" for c in CATEGORIAS.values() for i in c}
-if "evidence_5109_v4" not in st.session_state:
-    st.session_state.evidence_5109_v4 = {i[0]: [] for c in CATEGORIAS.values() for i in c}
+# ===========================================
+# ESTADO / NOTAS / EVIDENCIAS
+# ===========================================
+if "status_5109_v5" not in st.session_state:
+    st.session_state.status_5109_v5 = {i[0]: "none" for c in CATEGORIAS.values() for i in c}
+if "note_5109_v5" not in st.session_state:
+    st.session_state.note_5109_v5   = {i[0]: "" for c in CATEGORIAS.values() for i in c}
+if "evidence_5109_v5" not in st.session_state:
+    st.session_state.evidence_5109_v5 = {i[0]: [] for c in CATEGORIAS.values() for i in c}
 
 def _wrap(text: str, chunk: int = 110) -> str:
     if not text:
@@ -164,16 +173,16 @@ def _wrap(text: str, chunk: int = 110) -> str:
     s = str(text)
     return "\\n".join([s[i:i+chunk] for i in range(0, len(s), chunk)])
 
-# ==============================
-# RENDER DEL CHECKLIST
-# ==============================
-st.header("Checklist por etapas — 5109/2005 (versión depurada)")
+# ===========================================
+# UI — CHECKLIST
+# ===========================================
+st.header("Checklist por etapas — Resolución 5109/2005 (v5)")
 st.markdown("Responde con ✅ Cumple / ❌ No cumple / ⚪ No aplica. Si marcas **No cumple**, podrás **adjuntar evidencia**.")
 
 for categoria, items in CATEGORIAS.items():
     st.subheader(categoria)
     for (titulo, que_verificar, referencia, aplica) in items:
-        estado = st.session_state.status_5109_v4.get(titulo, "none")
+        estado = st.session_state.status_5109_v5.get(titulo, "none")
         if solo_no and estado != "no":
             continue
 
@@ -185,15 +194,15 @@ for categoria, items in CATEGORIAS.items():
         c1, c2, c3, _ = st.columns([0.12, 0.12, 0.12, 0.64])
         with c1:
             if st.button("✅ Cumple", key=f"{titulo}_yes"):
-                st.session_state.status_5109_v4[titulo] = "yes"
+                st.session_state.status_5109_v5[titulo] = "yes"
         with c2:
             if st.button("❌ No cumple", key=f"{titulo}_no"):
-                st.session_state.status_5109_v4[titulo] = "no"
+                st.session_state.status_5109_v5[titulo] = "no"
         with c3:
             if st.button("⚪ No aplica", key=f"{titulo}_na"):
-                st.session_state.status_5109_v4[titulo] = "na"
+                st.session_state.status_5109_v5[titulo] = "na"
 
-        estado = st.session_state.status_5109_v4[titulo]
+        estado = st.session_state.status_5109_v5[titulo]
         if estado == "yes":
             st.markdown("<div style='background:#e6ffed;padding:6px;border-radius:5px;'>✅ Cumple</div>", unsafe_allow_html=True)
         elif estado == "no":
@@ -203,23 +212,23 @@ for categoria, items in CATEGORIAS.items():
         else:
             st.markdown("<div style='background:#fff;padding:6px;border-radius:5px;'>Sin responder</div>", unsafe_allow_html=True)
 
-        nota = st.text_area("Observación (opcional)", value=st.session_state.note_5109_v4.get(titulo, ""), key=f"{titulo}_nota")
-        st.session_state.note_5109_v4[titulo] = nota
+        nota = st.text_area("Observación (opcional)", value=st.session_state.note_5109_v5.get(titulo, ""), key=f"{titulo}_nota")
+        st.session_state.note_5109_v5[titulo] = nota
 
-        if st.session_state.status_5109_v4[titulo] == "no":
+        if st.session_state.status_5109_v5[titulo] == "no":
             st.markdown("**Adjunta evidencia (JPG/PNG):**")
             files = st.file_uploader("Subir imágenes", type=["jpg","jpeg","png"], accept_multiple_files=True, key=f"upl_{titulo}")
             if files:
                 caption = st.text_input("Descripción breve para estas imágenes (opcional)", key=f"cap_{titulo}")
                 if st.button("Agregar evidencia", key=f"btn_add_{titulo}"):
                     for f in files:
-                        st.session_state.evidence_5109_v4[titulo].append({
+                        st.session_state.evidence_5109_v5[titulo].append({
                             "name": f.name,
                             "base64": base64.b64encode(f.read()).decode("utf-8"),
                             "caption": caption or ""
                         })
                     st.success(f"Se agregaron {len(files)} imagen(es) a: {titulo}")
-            ev_list = st.session_state.evidence_5109_v4.get(titulo, [])
+            ev_list = st.session_state.evidence_5109_v5.get(titulo, [])
             if ev_list:
                 st.markdown("**Evidencia acumulada:**")
                 cols = st.columns(4)
@@ -230,23 +239,23 @@ for categoria, items in CATEGORIAS.items():
 
         st.markdown("---")
 
-# ==============================
+# ===========================================
 # MÉTRICAS
-# ==============================
-yes_count = sum(1 for v in st.session_state.status_5109_v4.values() if v == "yes")
-no_count = sum(1 for v in st.session_state.status_5109_v4.values() if v == "no")
+# ===========================================
+yes_count = sum(1 for v in st.session_state.status_5109_v5.values() if v == "yes")
+no_count  = sum(1 for v in st.session_state.status_5109_v5.values() if v == "no")
 answered_count = yes_count + no_count
 percent = round((yes_count / answered_count * 100), 1) if answered_count > 0 else 0.0
 st.metric("Cumplimiento total (sobre ítems contestados)", f"{percent}%")
 st.write(
     f"CUMPLE: {yes_count} — NO CUMPLE: {no_count} — "
-    f"NO APLICA: {sum(1 for v in st.session_state.status_5109_v4.values() if v == 'na')} — "
-    f"SIN RESPONDER: {sum(1 for v in st.session_state.status_5109_v4.values() if v == 'none')}"
+    f"NO APLICA: {sum(1 for v in st.session_state.status_5109_v5.values() if v == 'na')} — "
+    f"SIN RESPONDER: {sum(1 for v in st.session_state.status_5109_v5.values() if v == 'none')}"
 )
 
-# ==============================
-# PDF (A4 horizontal) con portada + evidencias
-# ==============================
+# ===========================================
+# PDF (horizontal) — portada (v5) + evidencias
+# ===========================================
 def generar_pdf():
     buf = BytesIO()
     doc = SimpleDocTemplate(
@@ -260,10 +269,10 @@ def generar_pdf():
     style_cell   = ParagraphStyle("cell",   parent=styles["Normal"], fontSize=8, leading=10)
 
     story = []
-    # Portada
+    # Portada v5
     fecha_str = fecha_verif or datetime.now().strftime("%Y-%m-%d")
     portada = (
-        f"<b>Informe de verificación — Rotulado general (Res. 5109/2005)</b><br/>"
+        f"<b>Informe de verificación — Rotulado general (Res. 5109/2005 v5)</b><br/>"
         f"<b>Fecha:</b> {fecha_str} &nbsp;&nbsp; "
         f"<b>Producto:</b> {producto or '-'} &nbsp;&nbsp; "
         f"<b>Responsable:</b> {responsable or '-'}<br/>"
@@ -278,18 +287,18 @@ def generar_pdf():
     story.append(Paragraph(f"<b>Cumplimiento (sobre ítems contestados):</b> {percent}%", style_header))
     story.append(Spacer(1, 4*mm))
 
-    # Tabla principal
+    # Tabla
     data = [["Ítem", "Estado", "Observación", "Referencia"]]
     for items in CATEGORIAS.values():
         for (titulo, _, referencia, _) in items:
-            estado_val = st.session_state.status_5109_v4.get(titulo, "none")
+            estado_val = st.session_state.status_5109_v5.get(titulo, "none")
             estado_humano = (
                 "Cumple" if estado_val == "yes"
                 else "No cumple" if estado_val == "no"
                 else "No aplica" if estado_val == "na"
                 else "Sin responder"
             )
-            obs = st.session_state.note_5109_v4.get(titulo, "") or "-"
+            obs = st.session_state.note_5109_v5.get(titulo, "") or "-"
             obs = "-" if obs.strip() == "" else _wrap(obs, 110)
             data.append([
                 Paragraph(str(titulo),        style_cell),
@@ -311,12 +320,12 @@ def generar_pdf():
     story.append(tbl)
 
     # Evidencias (página nueva)
-    any_ev = any(len(v) > 0 for v in st.session_state.evidence_5109_v4.values())
+    any_ev = any(len(v) > 0 for v in st.session_state.evidence_5109_v5.values())
     if any_ev:
         story.append(PageBreak())
         story.append(Paragraph("<b>Evidencia fotográfica</b>", style_header))
         story.append(Spacer(1, 3*mm))
-        for titulo, ev_list in st.session_state.evidence_5109_v4.items():
+        for titulo, ev_list in st.session_state.evidence_5109_v5.items():
             if not ev_list:
                 continue
             story.append(Paragraph(f"<b>Ítem:</b> {titulo}", style_header))
@@ -337,11 +346,11 @@ def generar_pdf():
     buf.seek(0)
     return buf
 
-# ==============================
+# ===========================================
 # EXPORTAR PDF
-# ==============================
+# ===========================================
 st.subheader("Generar informe PDF (A4 horizontal)")
 if st.button("Generar PDF"):
     pdf_buffer = generar_pdf()
-    file_name = (nombre_pdf.strip() or f"informe_5109_v4_{datetime.now().strftime('%Y%m%d')}") + ".pdf"
+    file_name = (nombre_pdf.strip() or f"informe_5109_v5_{datetime.now().strftime('%Y%m%d')}") + ".pdf"
     st.download_button("Descargar PDF", data=pdf_buffer, file_name=file_name, mime="application/pdf")
