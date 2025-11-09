@@ -9,168 +9,199 @@ from reportlab.lib.units import mm
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image as RLImage, PageBreak
 
-# ------------------------------------------------------------------
-# APP 5109 SOLO (sin 810/2492). Con evidencia fotográfica por ítem NO CUMPLE.
-# ------------------------------------------------------------------
-st.set_page_config(page_title="Checklist Rotulado — Resolución 5109/2005", layout="wide")
-st.title("Checklist de rotulado — Resolución 5109 de 2005 (Colombia)")
+# For visualization
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 # ------------------------------------------------------------------
-# SIDEBAR: Datos generales
+# APP 810 + 2492 (tabla nutricional, declaraciones y sellos frontales)
+# Con evidencia fotográfica por ítem NO CUMPLE y exporte a PDF
+# ------------------------------------------------------------------
+st.set_page_config(page_title="Checklist Etiquetado — Res. 810/2021 y 2492/2022", layout="wide")
+st.title("Checklist de etiquetado nutricional — Resoluciones 810/2021 y 2492/2022 (Colombia)")
+
+# ------------------------------------------------------------------
+# SIDEBAR: Datos de la verificación
 # ------------------------------------------------------------------
 st.sidebar.header("Datos de la verificación")
 producto = st.sidebar.text_input("Nombre del producto")
-categoria_producto = st.sidebar.selectbox("Tipo", ["Producto terminado", "Materia prima", "Ambos"])
+categoria_producto = st.sidebar.selectbox("Tipo", ["Producto terminado", "Materia prima (para uso industrial)", "Ambos"])
 proveedor = st.sidebar.text_input("Proveedor / Fabricante")
 responsable = st.sidebar.text_input("Responsable de la verificación")
 invima_num = st.sidebar.text_input("Registro sanitario INVIMA (si aplica a producto terminado)")
 invima_url = st.sidebar.text_input("URL consulta INVIMA (opcional)")
 invima_estado_ok = st.sidebar.checkbox("Verificación en INVIMA realizada y ACTIVO (coincide nombre/empresa)", value=False)
-nombre_pdf = st.sidebar.text_input("Nombre del PDF (sin .pdf)", f"informe_5109_{datetime.now().strftime('%Y%m%d')}")
+nombre_pdf = st.sidebar.text_input("Nombre del PDF (sin .pdf)", f"informe_810_2492_{datetime.now().strftime('%Y%m%d')}")
 filter_no = st.sidebar.checkbox("Mostrar solo 'No cumple'", value=False)
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Este recurso guía una verificación práctica según la Resolución 5109/2005 y normas generales de rotulado de alimentos en Colombia (sin incluir requisitos de tabla nutricional ni sellos frontales regulados por 810/2492).")
+st.sidebar.caption("Guía práctica para verificación de etiquetado nutricional, declaraciones y sellos frontales según Res. 810/2021 modificada por Res. 2492/2022.")
 
 # ------------------------------------------------------------------
-# Definición ordenada de criterios (flujo típico de revisión física)
-# Solo referencias y textos en el marco de la Res. 5109/2005 y lineamientos generales sanitarios
+# Definición ordenada de criterios (flujo de revisión)
 # ------------------------------------------------------------------
 CATEGORIAS = {
-    "1. Identificación sanitaria y legal": [
+    "1. Identificación inicial y aplicabilidad": [
         ("Registro sanitario INVIMA visible y vigente",
-         "Verificar que el rótulo del PRODUCTO TERMINADO muestre el número de registro sanitario INVIMA, legible, indeleble y en el empaque. Confirmar en el portal del INVIMA que el registro está ACTIVO y que el nombre del producto, titular y fabricante coinciden con lo impreso.",
-         "Asegurar que el número esté en el empaque, sea legible/indeleble y que su estado sea ACTIVO y coincidente en INVIMA.",
-         "Res. 5109/2005 (arts. 3, 4, 5) + control sanitario general"),
-        ("Nombre y dirección del fabricante, importador o reenvasador",
-         "Debe indicarse la razón social y dirección física completa del fabricante nacional o importador (y del reenvasador, si aplica), legibles e indelebles.",
-         "Incluir razón social y dirección completas del responsable de fabricación/importación/reenvasado.",
-         "Res. 5109/2005 art. 5.8"),
-        ("País de origen",
-         "Declarar claramente 'Hecho en...' o 'Producto de...' según procedencia del alimento.",
-         "Incluir país de origen de forma explícita y legible.",
-         "Res. 5109/2005 art. 5.9"),
+         "Verificar que el número INVIMA esté impreso en el empaque (producto terminado), legible/indeleble. Confirmar en portal INVIMA que el registro está ACTIVO y que el nombre del producto, titular y fabricante coinciden con lo impreso.",
+         "Asegurar impresión del INVIMA en el envase y coherencia con la consulta oficial (estado ACTIVO).",
+         "Control sanitario general; Res. 810/2021 art. 2 (definiciones de aplicabilidad); buenas prácticas de rotulado."),
+        ("Idioma español (información obligatoria)",
+         "Toda la información obligatoria debe estar en español; en importados, usar rótulo complementario adherido con la traducción completa.",
+         "Incluir rótulo complementario en español cuando aplique.",
+         "Res. 810/2021 art. 27.1.3"),
+        ("Determinación de aplicabilidad (consumidor final vs. uso industrial)",
+         "Confirmar si el producto se destina al consumidor final (requiere tabla nutricional y evaluación de sellos) o si es materia prima para uso industrial (exceptuado de tabla/sellos, pero debe cumplir trazabilidad).",
+         "Clasificar correctamente el producto para aplicar los requisitos pertinentes.",
+         "Res. 810/2021 art. 2; Res. 2492/2022 (modifica definiciones y exenciones)."),
     ],
-    "2. Denominación y composición declarada": [
-        ("Denominación del alimento (verdadera naturaleza)",
-         "La denominación debe describir la verdadera naturaleza del alimento (no sustituida por la marca).",
-         "Usar una denominación precisa que refleje el alimento.",
-         "Res. 5109/2005 art. 5.1"),
-        ("Marca comercial (no sustituye denominación)",
-         "La marca puede acompañar, pero no reemplazar la denominación del alimento.",
-         "Conservar denominación técnica junto a la marca.",
-         "Res. 5109/2005 art. 5.1.2"),
-        ("Lista de ingredientes en orden decreciente de peso",
-         "Listar todos los ingredientes en orden decreciente de su peso al momento de formulación. Incluir aditivos con su categoría funcional y nombre específico (p. ej., 'Conservante (Sorbato de potasio)').",
-         "Completar/ordenar correctamente la lista y declarar aditivos con categoría y nombre.",
-         "Res. 5109/2005 art. 5.2"),
-        ("Aditivos alimentarios declarados correctamente",
-         "Los aditivos deben declararse por su nombre común o categoría funcional; no usar códigos ni abreviaturas.",
-         "Declarar aditivos por nombre común o categoría funcional.",
-         "Res. 5109/2005 art. 5.2.1"),
-        ("Contenido neto en cara principal",
-         "Expresar el contenido neto en unidades del SI (g, kg, mL o L), excluyendo el envase. Debe estar en la cara frontal de exhibición, legible y con buen contraste.",
-         "Ubicar el contenido neto en la cara principal y con unidad SI.",
-         "Res. 5109/2005 (arts. 3, 5 y anexo de rotulado)"),
+
+    "2. Tabla nutricional obligatoria (estructura y formato)": [
+        ("Presencia de la tabla nutricional",
+         "Confirmar presencia de la tabla nutricional en alimentos destinados al consumidor final (excepciones: productos no envasados, mínimamente procesados, algunos a granel, etc.).",
+         "Incluir la tabla nutricional cuando aplique (según destino y exenciones).",
+         "Res. 810/2021 arts. 8, 9 y 10 (obligatoriedad y estructura)."),
+        ("Forma de presentación: por 100 g / 100 mL y por porción",
+         "La información debe declararse como mínimo por 100 g/100 mL y por porción; coherencia con estado físico (sólido/líquido).",
+         "Incluir ambos ejes (100 g/100 mL y por porción).",
+         "Res. 810/2021 art. 12."),
+        ("Número de porciones por envase",
+         "Declarar el número de porciones por envase (salvo productos de peso variable).",
+         "Agregar número de porciones por envase si aplica.",
+         "Res. 810/2021 art. 12 y par. 2 art. 2 (mod. 2492/2022)."),
+        ("Nutrientes obligatorios mínimos",
+         "Declarar al menos: energía (kcal), grasa total, grasa saturada, grasa trans, carbohidratos totales, azúcares totales, proteínas y sodio (con unidades normativas).",
+         "Asegurar la inclusión de todos los nutrientes mínimos obligatorios.",
+         "Res. 810/2021 art. 8-10 (y tablas asociadas)."),
+        ("Micronutrientes (cuando se declaren)",
+         "Si se declaran vitaminas/minerales, cumplir umbrales mínimos/máximos permitidos; presentar en bloque separado por línea, sin inducir a error.",
+         "Ajustar la sección de micronutrientes a límites y formato establecidos.",
+         "Res. 810/2021 art. 15 y 28.3."),
+        ("Tolerancias analíticas",
+         "La diferencia entre valores declarados y resultados analíticos no debe exceder ±20% (salvo excepciones).",
+         "Verificar resultados de laboratorio y ajustar declaraciones si exceden tolerancias.",
+         "Res. 810/2021 art. 14."),
+        ("Formato, legibilidad y tipografía de la tabla",
+         "Usar tipografía clara, contraste adecuado, líneas y disposición según lineamientos de la resolución; evitar que el texto quede cortado o ilegible.",
+         "Ajustar tipografía/contraste y estructura de la tabla para legibilidad.",
+         "Res. 810/2021 art. 27 (parámetros gráficos para la tabla)."),
     ],
-    "3. Identificación de lote y fechas": [
-        ("Lote impreso sobre el empaque",
-         "El código/lote debe estar impreso directamente sobre el empaque o etiqueta adherida, legible, indeleble y ubicado para lectura rápida (trazabilidad).",
-         "Imprimir lote en el empaque con alta legibilidad e indelebilidad.",
-         "Res. 5109/2005 art. 5.4"),
-        ("Fecha de vencimiento o duración mínima impresa",
-         "Imprimir en el empaque (no solo en la caja externa) la fecha de vencimiento/duración mínima en formato claro (recomendado día/mes/año) y legible. Debe corresponder al alimento ofrecido al consumidor.",
-         "Asegurar impresión directa en el empaque y formato legible.",
-         "Res. 5109/2005 art. 5.5"),
-        ("Condiciones de conservación y almacenamiento",
-         "Cuando el alimento requiera condiciones especiales (refrigeración, temperatura, luz, humedad), declararlas junto a la fecha para preservar inocuidad/calidad.",
-         "Indicar claramente condiciones de conservación si aplican.",
-         "Res. 5109/2005 arts. 3 y 5"),
-        ("Modo de empleo / instrucciones de uso (si son necesarias)",
-         "Si para el uso seguro/adecuado del alimento se requieren instrucciones (reconstitución, calentamiento, dilución), deben declararse.",
-         "Agregar instrucciones de uso cuando sean necesarias.",
-         "Res. 5109/2005 art. 5 (principios de información)"),
+
+    "3. Declaraciones nutricionales y de salud": [
+        ("Declaraciones nutricionales (p. ej., 'fuente de', 'alto en')",
+         "Solo pueden usarse si el producto cumple los criterios mínimos de contenido y el perfil de nutrientes (no debe exhibir sellos de advertencia que invaliden la declaración). Sustentar cuantitativamente (p. ej., %VD).",
+         "Mantener solo declaraciones permitidas y sustentadas; retirar si no cumplen.",
+         "Res. 810/2021 art. 16 y 25.4 (modificada por 2492/2022)."),
+        ("Declaraciones de salud / funcionales",
+         "Deben ser veraces, no engañosas y estar autorizadas por el MSPS cuando aplique. No atribuir propiedades medicinales (prevenir, tratar, curar enfermedades).",
+         "Usar únicamente declaraciones autorizadas y con soporte científico.",
+         "Res. 810/2021 art. 25."),
+        ("Prohibición de declaraciones engañosas",
+         "Evitar equivalencias simplistas o beneficios no sustentados. No utilizar mensajes que confundan sobre composición o efectos del producto.",
+         "Eliminar declaraciones confusas o engañosas.",
+         "Res. 810/2021 art. 25.5."),
     ],
-    "4. Presentación del rótulo y veracidad": [
-        ("Idioma español",
-         "Toda la información obligatoria debe estar en español. Para importados, puede usarse rótulo complementario adherido con la traducción.",
-         "Asegurar rotulado completo en español o rótulo complementario.",
-         "Res. 5109/2005 art. 5"),
-        ("Legibilidad, contraste y permanencia",
-         "El texto debe ser visible, legible, indeleble y con buen contraste respecto del fondo; no oculto por pliegues o cierres.",
-         "Mejorar tamaño de letra/contraste y asegurar indelebilidad.",
-         "Res. 5109/2005 arts. 3, 4 y 6"),
-        ("Ubicación y visibilidad en cara principal",
-         "La información obligatoria no debe quedar oculta; colocarla en la(s) cara(s) visible(s) al consumidor.",
-         "Reubicar la información para asegurar visibilidad.",
-         "Res. 5109/2005 arts. 3 y 5"),
-        ("Prohibición de inducir a error o atribuir propiedades medicinales",
-         "El rótulo no debe contener afirmaciones falsas, engañosas o atribuir propiedades de prevenir, tratar o curar enfermedades.",
-         "Eliminar frases/elementos que induzcan a error o sean medicinales.",
-         "Res. 5109/2005 art. 4"),
-        ("Información del importador y rótulo complementario (si aplica)",
-         "Para productos importados, además del país de origen, indicar el importador responsable en Colombia y adherir rótulo complementario en español cuando sea necesario.",
-         "Incluir importador y rótulo complementario en español.",
-         "Res. 5109/2005 arts. 2, 5"),
+
+    "4. Etiquetado frontal de advertencia (sellos negros)": [
+        ("Determinación de aplicabilidad de sellos",
+         "Verificar si el alimento procesado/ultraprocesado supera los límites para azúcares libres, grasas saturadas, grasas trans o sodio; o si contiene edulcorantes (calóricos o no).",
+         "Evaluar composición y decidir si requiere sellos.",
+         "Res. 810/2021 art. 32 (mod. por 2492/2022)."),
+        ("Límites de nutrientes críticos (criterios OPS)",
+         "Azúcares libres ≥10% de energía total; grasas saturadas ≥10% de energía total; grasas trans ≥1% de energía total; sodio ≥1 mg/kcal o ≥300 mg/100 g (sólidos). Bebidas sin aporte energético: sodio ≥40 mg/100 mL.",
+         "Comparar formulación vs. límites y aplicar sello si corresponde.",
+         "Res. 810/2021 (Tabla de límites) mod. por Res. 2492/2022."),
+        ("Sello 'Contiene edulcorante'",
+         "Cuando el producto contenga edulcorantes, incluir sello de advertencia ('Contiene edulcorante, no recomendable en niños').",
+         "Agregar sello correspondiente si contiene edulcorantes.",
+         "Res. 2492/2022 (parámetros para edulcorantes)."),
+        ("Forma, color y tipografía del sello",
+         "Usar octágono negro con borde blanco, texto en mayúsculas de alto contraste ('EXCESO EN ...') según tipografía permitida.",
+         "Ajustar forma, color y tipografía al estándar.",
+         "Res. 2492/2022 (especificaciones gráficas)."),
+        ("Ubicación y tamaño del sello (Tabla 17)",
+         "Ubicar los sellos en el tercio superior de la cara principal de exhibición, sin obstrucciones. Dimensiones mínimas según el área principal del envase (Tabla 17).",
+         "Reubicar/aumentar tamaño conforme a Tabla 17.",
+         "Res. 810/2021 art. 32 y Tabla 17 (mod. 2492/2022)."),
+        ("Excepciones a sellos",
+         "Aplicar exenciones (p. ej., alimentos no procesados o mínimamente procesados, fórmulas infantiles, productos artesanales/típicos definidos, ciertos a granel, etc.).",
+         "Documentar y justificar exención cuando corresponda.",
+         "Res. 810/2021 art. 2 (definiciones y exenciones) mod. 2492/2022."),
     ],
-    "5. Control documental y soportes": [
-        ("Soportes técnicos disponibles (fichas, especificaciones)",
-         "Mantener fichas técnicas, especificaciones y documentación que respalde lo declarado (ingredientes, aditivos, condiciones).",
-         "Adjuntar/solicitar soportes documentales actualizados.",
-         "Res. 5109/2005 (buenas prácticas de información)"),
-        ("Trazabilidad del proveedor",
-         "El rótulo debe permitir rastrear el producto (lote, fabricante, dirección) para retiro en caso de no conformidades.",
-         "Verificar que la información permita la trazabilidad.",
-         "Res. 5109/2005 art. 5.4"),
+
+    "5. Requisitos gráficos y de legibilidad (generales)": [
+        ("Legibilidad y contraste del rótulo",
+         "Información clara, visible, indeleble y con contraste suficiente respecto del fondo. Evitar pliegues/cortes que oculten el texto.",
+         "Mejorar contraste/tamaño y asegurar indelebilidad.",
+         "Res. 810/2021 art. 27 (parámetros gráficos)."),
+        ("Ubicación visible (cara principal de exhibición)",
+         "Elementos obligatorios en la cara de fácil lectura/visualización por el consumidor.",
+         "Reubicar contenido para visibilidad adecuada.",
+         "Res. 810/2021 art. 27 y definiciones de 'cara principal'."),
+    ],
+
+    "6. Control y evidencia documental": [
+        ("Certificado de análisis (soporte de la tabla)",
+         "Contar con resultados de laboratorio (preferible acreditado) que soporten los valores declarados; ajustar frente a tolerancias.",
+         "Solicitar/adjuntar certificado de análisis vigente.",
+         "Res. 810/2021 art. 14."),
+        ("Fichas técnicas y especificaciones de ingredientes",
+         "Disponibilidad de fichas/especificaciones que respalden composición, aditivos, edulcorantes y contenido de nutrientes críticos.",
+         "Mantener documentación de respaldo actualizada.",
+         "Res. 810/2021 (soporte documental para declaraciones y sellos)."),
     ],
 }
 
-# Aplicabilidad (sugerida)
+# Mapa de aplicabilidad sugerida
 APLICA = {
     # 1
     "Registro sanitario INVIMA visible y vigente": "Producto terminado",
-    "Nombre y dirección del fabricante, importador o reenvasador": "Ambos",
-    "País de origen": "Ambos",
+    "Idioma español (información obligatoria)": "Ambos",
+    "Determinación de aplicabilidad (consumidor final vs. uso industrial)": "Ambos",
     # 2
-    "Denominación del alimento (verdadera naturaleza)": "Ambos",
-    "Marca comercial (no sustituye denominación)": "Ambos",
-    "Lista de ingredientes en orden decreciente de peso": "Producto terminado",
-    "Aditivos alimentarios declarados correctamente": "Ambos",
-    "Contenido neto en cara principal": "Producto terminado",
+    "Presencia de la tabla nutricional": "Producto terminado",
+    "Forma de presentación: por 100 g / 100 mL y por porción": "Producto terminado",
+    "Número de porciones por envase": "Producto terminado",
+    "Nutrientes obligatorios mínimos": "Producto terminado",
+    "Micronutrientes (cuando se declaren)": "Producto terminado",
+    "Tolerancias analíticas": "Producto terminado",
+    "Formato, legibilidad y tipografía de la tabla": "Producto terminado",
     # 3
-    "Lote impreso sobre el empaque": "Ambos",
-    "Fecha de vencimiento o duración mínima impresa": "Ambos",
-    "Condiciones de conservación y almacenamiento": "Ambos",
-    "Modo de empleo / instrucciones de uso (si son necesarias)": "Producto terminado",
+    "Declaraciones nutricionales (p. ej., 'fuente de', 'alto en')": "Producto terminado",
+    "Declaraciones de salud / funcionales": "Producto terminado",
+    "Prohibición de declaraciones engañosas": "Producto terminado",
     # 4
-    "Idioma español": "Ambos",
-    "Legibilidad, contraste y permanencia": "Ambos",
-    "Ubicación y visibilidad en cara principal": "Ambos",
-    "Prohibición de inducir a error o atribuir propiedades medicinales": "Ambos",
-    "Información del importador y rótulo complementario (si aplica)": "Producto terminado",
+    "Determinación de aplicabilidad de sellos": "Producto terminado",
+    "Límites de nutrientes críticos (criterios OPS)": "Producto terminado",
+    "Sello 'Contiene edulcorante'": "Producto terminado",
+    "Forma, color y tipografía del sello": "Producto terminado",
+    "Ubicación y tamaño del sello (Tabla 17)": "Producto terminado",
+    "Excepciones a sellos": "Producto terminado",
     # 5
-    "Soportes técnicos disponibles (fichas, especificaciones)": "Ambos",
-    "Trazabilidad del proveedor": "Ambos",
+    "Legibilidad y contraste del rótulo": "Ambos",
+    "Ubicación visible (cara principal de exhibición)": "Ambos",
+    # 6
+    "Certificado de análisis (soporte de la tabla)": "Producto terminado",
+    "Fichas técnicas y especificaciones de ingredientes": "Ambos",
 }
 
 # ------------------------------------------------------------------
-# Estado y notas en sesión
+# Estado, notas y evidencia en sesión
 # ------------------------------------------------------------------
-if "status" not in st.session_state:
-    st.session_state.status = {i[0]: "none" for c in CATEGORIAS.values() for i in c}
-if "note" not in st.session_state:
-    st.session_state.note = {i[0]: "" for c in CATEGORIAS.values() for i in c}
-# Evidencia: lista de imágenes por ítem (cada elemento: dict con keys 'name', 'bytes', 'caption')
-if "evidence" not in st.session_state:
-    st.session_state.evidence = {i[0]: [] for c in CATEGORIAS.values() for i in c}
+if "status_810" not in st.session_state:
+    st.session_state.status_810 = {i[0]: "none" for c in CATEGORIAS.values() for i in c}
+if "note_810" not in st.session_state:
+    st.session_state.note_810 = {i[0]: "" for c in CATEGORIAS.values() for i in c}
+if "evidence_810" not in st.session_state:
+    st.session_state.evidence_810 = {i[0]: [] for c in CATEGORIAS.values() for i in c}
 
-st.header("Checklist según flujo de revisión (5109/2005)")
+st.header("Checklist según flujo de revisión (810/2021 y 2492/2022)")
 st.markdown("Responde con ✅ Cumple / ❌ No cumple / ⚪ No aplica. Cuando marques **No cumple**, podrás **adjuntar evidencia fotográfica**.")
 
-# Métrica rápida arriba (se actualiza al vuelo)
+# Métrica rápida
 def compute_metrics():
-    yes = sum(1 for v in st.session_state.status.values() if v == "yes")
-    no = sum(1 for v in st.session_state.status.values() if v == "no")
+    yes = sum(1 for v in st.session_state.status_810.values() if v == "yes")
+    no = sum(1 for v in st.session_state.status_810.values() if v == "no")
     answered = yes + no
     pct = round((yes / answered * 100), 1) if answered > 0 else 0.0
     return yes, no, answered, pct
@@ -178,12 +209,30 @@ def compute_metrics():
 yes_count, no_count, answered_count, percent = compute_metrics()
 st.metric("Cumplimiento total (sobre ítems contestados)", f"{percent}%")
 
+# Tabla 17 referencia (área -> tamaño cm)
+TABLA_17 = [
+    ("< 30 cm²", None),  # caso especial: rotulado secundario / QR
+    ("≥30 a <35 cm²", 1.7),
+    ("≥35 a <40 cm²", 1.8),
+    ("≥40 a <50 cm²", 2.0),
+    ("≥50 a <60 cm²", 2.2),
+    ("≥60 a <80 cm²", 2.5),
+    ("≥80 a <100 cm²", 2.8),
+    ("≥100 a <125 cm²", 3.1),
+    ("≥125 a <150 cm²", 3.4),
+    ("≥150 a <200 cm²", 3.9),
+    ("≥200 a <250 cm²", 4.4),
+    ("≥250 a <300 cm²", 4.8),
+    ("> 300 cm²", "15% del lado de la cara principal"),
+]
+df_tabla17 = pd.DataFrame(TABLA_17, columns=["Área principal de la cara", "Lado mínimo del sello (cm)"])
+
 for categoria, items in CATEGORIAS.items():
     st.subheader(categoria)
     for item in items:
         titulo, que_verificar, recomendacion, referencia = item
 
-        estado = st.session_state.status.get(titulo, "none")
+        estado = st.session_state.status_810.get(titulo, "none")
         if filter_no and estado != "no":
             continue
 
@@ -192,19 +241,71 @@ for categoria, items in CATEGORIAS.items():
         st.markdown(f"**Referencia:** {referencia}")
         st.markdown(f"**Aplica a:** {APLICA.get(titulo, 'Ambos')}")
 
+        # --- BLOQUE VISUAL SOLO INTERFAZ (no va al PDF) ---
+        if titulo == "Ubicación y tamaño del sello (Tabla 17)":
+            st.markdown("**Referencia visual (solo guía en pantalla):**")
+            st.dataframe(df_tabla17, use_container_width=True)
+
+            colA, colB, colC = st.columns([0.4, 0.3, 0.3])
+            with colA:
+                area_opcion = st.selectbox(
+                    "Selecciona el rango de área de la cara principal",
+                    options=[r[0] for r in TABLA_17 if r[0] != "< 30 cm²"],  # excluye el caso de rotulado secundario
+                    key="area_tabla17_sel"
+                )
+            with colB:
+                num_sellos = st.selectbox("Cantidad de sellos", options=[1,2,3,4], index=0, key="num_sellos_sel")
+            with colC:
+                ancho_cara_cm = None
+                if area_opcion == "> 300 cm²":
+                    ancho_cara_cm = st.number_input("Ancho cara principal (cm) para calcular 15%", min_value=1.0, value=10.0, step=0.5, key="ancho_cara_calc")
+
+            # Determinar tamaño del sello (cm)
+            def get_sello_cm(area_key: str, ancho_cara=None):
+                if area_key == "> 300 cm²":
+                    if ancho_cara is None:
+                        return None
+                    return round(0.15 * float(ancho_cara), 2)
+                for k, v in TABLA_17:
+                    if k == area_key:
+                        return v
+                return None
+
+            lado_cm = get_sello_cm(area_opcion, ancho_cara_cm)
+            espaciado_cm = 0.2  # separación visual entre sellos
+            if lado_cm is not None:
+                ancho_total = round(num_sellos * lado_cm + (num_sellos - 1) * espaciado_cm, 2)
+                st.markdown(f"**Resultado:** Lado del sello = **{lado_cm} cm** · Ancho total del conjunto ({num_sellos} sello(s)) ≈ **{ancho_total} cm** (con {espaciado_cm} cm de separación).")
+                st.success("✅ Cumple con el tamaño mínimo de acuerdo con Tabla 17.")
+
+                # Visualización proporcional (no escala real)
+                fig, ax = plt.subplots(figsize=(6, 1.8))
+                x = 0.0
+                for i in range(num_sellos):
+                    rect = Rectangle((x, 0), lado_cm, lado_cm, linewidth=1.0, edgecolor='black', facecolor='black')
+                    ax.add_patch(rect)
+                    x += lado_cm + espaciado_cm
+                ax.set_xlim(-0.1, max(3*lado_cm, x) + 0.1)
+                ax.set_ylim(-0.1, lado_cm + 0.1)
+                ax.set_aspect('equal')
+                ax.axis('off')
+                st.pyplot(fig)
+            else:
+                st.warning("Para el rango seleccionado, ingresa el **ancho de la cara principal (cm)** para calcular el 15% del lado del sello.")
+
         c1, c2, c3, _ = st.columns([0.12, 0.12, 0.12, 0.64])
         with c1:
-            if st.button("✅ Cumple", key=f"{titulo}_yes"):
-                st.session_state.status[titulo] = "yes"
+            if st.button("✅ Cumple", key=f"{titulo}_yes_810"):
+                st.session_state.status_810[titulo] = "yes"
         with c2:
-            if st.button("❌ No cumple", key=f"{titulo}_no"):
-                st.session_state.status[titulo] = "no"
+            if st.button("❌ No cumple", key=f"{titulo}_no_810"):
+                st.session_state.status_810[titulo] = "no"
         with c3:
-            if st.button("⚪ No aplica", key=f"{titulo}_na"):
-                st.session_state.status[titulo] = "na"
+            if st.button("⚪ No aplica", key=f"{titulo}_na_810"):
+                st.session_state.status_810[titulo] = "na"
 
         # Visualización del estado
-        estado = st.session_state.status[titulo]
+        estado = st.session_state.status_810[titulo]
         if estado == "yes":
             st.markdown("<div style='background:#e6ffed;padding:6px;border-radius:5px;'>✅ Cumple</div>", unsafe_allow_html=True)
         elif estado == "no":
@@ -215,37 +316,33 @@ for categoria, items in CATEGORIAS.items():
             st.markdown("<div style='background:#fff;padding:6px;border-radius:5px;'>Sin responder</div>", unsafe_allow_html=True)
 
         # Observación libre
-        nota = st.text_area("Observación (opcional)", value=st.session_state.note.get(titulo, ""), key=f"{titulo}_nota")
-        st.session_state.note[titulo] = nota
+        nota = st.text_area("Observación (opcional)", value=st.session_state.note_810.get(titulo, ""), key=f"{titulo}_nota_810")
+        st.session_state.note_810[titulo] = nota
 
-        # ------------------------------------------------------
-        # Evidencia fotográfica (se activa SOLO cuando NO CUMPLE)
-        # ------------------------------------------------------
-        if st.session_state.status[titulo] == "no":
+        # Evidencia fotográfica cuando NO CUMPLE
+        if st.session_state.status_810[titulo] == "no":
             st.markdown("**Adjunta evidencia fotográfica del incumplimiento:**")
-            files = st.file_uploader("Subir imágenes (JPG/PNG) — puedes cargar varias", type=["jpg","jpeg","png"], accept_multiple_files=True, key=f"uploader_{titulo}")
+            files = st.file_uploader("Subir imágenes (JPG/PNG) — puedes cargar varias", type=["jpg","jpeg","png"], accept_multiple_files=True, key=f"uploader_{titulo}_810")
             if files:
-                # Pedir una descripción/caption común opcional para este bloque
-                caption = st.text_input("Descripción breve para estas imágenes (opcional)", key=f"caption_{titulo}")
-                if st.button("Agregar evidencia", key=f"add_ev_{titulo}"):
+                caption = st.text_input("Descripción breve para estas imágenes (opcional)", key=f"caption_{titulo}_810")
+                if st.button("Agregar evidencia", key=f"add_ev_{titulo}_810"):
                     for f in files:
-                        st.session_state.evidence[titulo].append({
+                        st.session_state.evidence_810[titulo].append({
                             "name": f.name,
                             "bytes": f.read(),
                             "caption": caption or ""
                         })
                     st.success(f"Se agregaron {len(files)} imagen(es) a la evidencia de: {titulo}")
 
-            # Mostrar miniaturas de la evidencia acumulada para el ítem
-            ev_list = st.session_state.evidence.get(titulo, [])
+            ev_list = st.session_state.evidence_810.get(titulo, [])
             if ev_list:
                 st.markdown("**Evidencia acumulada:**")
                 cols = st.columns(4)
                 for idx, ev in enumerate(ev_list):
                     with cols[idx % 4]:
                         st.image(ev["bytes"], caption=ev["caption"] or ev["name"], use_column_width=True)
-                        if st.button("Eliminar esta imagen", key=f"del_{titulo}_{idx}"):
-                            st.session_state.evidence[titulo].pop(idx)
+                        if st.button("Eliminar esta imagen", key=f"del_{titulo}_{idx}_810"):
+                            st.session_state.evidence_810[titulo].pop(idx)
                             st.experimental_rerun()
 
         st.markdown("---")
@@ -253,11 +350,10 @@ for categoria, items in CATEGORIAS.items():
 # ------------------------------------------------------------------
 # Resumen y exportación
 # ------------------------------------------------------------------
-# DataFrame de resultados
 rows = []
 for items in CATEGORIAS.values():
     for titulo, que_verificar, recomendacion, referencia in items:
-        estado_val = st.session_state.status.get(titulo, "none")
+        estado_val = st.session_state.status_810.get(titulo, "none")
         estado_humano = (
             "Cumple" if estado_val == "yes"
             else "No cumple" if estado_val == "no"
@@ -269,21 +365,18 @@ for items in CATEGORIAS.values():
             "Estado": estado_humano,
             "Recomendación": recomendacion,
             "Referencia": referencia,
-            "Observación": st.session_state.note.get(titulo, ""),
+            "Observación": st.session_state.note_810.get(titulo, ""),
         })
 df = pd.DataFrame(rows, columns=["Ítem", "Estado", "Recomendación", "Referencia", "Observación"])
 
 st.subheader("Resumen rápido")
 st.write(
-    f"CUMPLE: {sum(1 for v in st.session_state.status.values() if v == 'yes')} — "
-    f"NO CUMPLE: {sum(1 for v in st.session_state.status.values() if v == 'no')} — "
-    f"NO APLICA: {sum(1 for v in st.session_state.status.values() if v == 'na')} — "
-    f"SIN RESPONDER: {sum(1 for v in st.session_state.status.values() if v == 'none')}"
+    f"CUMPLE: {sum(1 for v in st.session_state.status_810.values() if v == 'yes')} — "
+    f"NO CUMPLE: {sum(1 for v in st.session_state.status_810.values() if v == 'no')} — "
+    f"NO APLICA: {sum(1 for v in st.session_state.status_810.values() if v == 'na')} — "
+    f"SIN RESPONDER: {sum(1 for v in st.session_state.status_810.values() if v == 'none')}"
 )
 
-# ------------------------------------------------------------------
-# Utilidad: dividir observación a saltos de línea
-# ------------------------------------------------------------------
 def split_observation_text(text: str, chunk: int = 100) -> str:
     if not text:
         return ""
@@ -293,9 +386,6 @@ def split_observation_text(text: str, chunk: int = 100) -> str:
     parts = [s[i:i+chunk] for i in range(0, len(s), chunk)]
     return "\\n".join(parts)
 
-# ------------------------------------------------------------------
-# PDF: Tabla resumen + bloque de evidencias (solo NO CUMPLE) al final
-# ------------------------------------------------------------------
 def generar_pdf(df: pd.DataFrame, producto: str, proveedor: str, responsable: str,
                 categoria_producto: str, invima_num: str, invima_url: str,
                 invima_estado_ok: bool, porcentaje: float, nombre_archivo: str) -> BytesIO:
@@ -311,7 +401,8 @@ def generar_pdf(df: pd.DataFrame, producto: str, proveedor: str, responsable: st
     style_cell   = ParagraphStyle("cell",   parent=styles["Normal"], fontSize=7.5, leading=9)
 
     story = []
-    story.append(Paragraph("<b>Informe de verificación de rotulado — Resolución 5109/2005</b>", style_header))
+    # Encabezado
+    story.append(Paragraph("<b>Informe de verificación de etiquetado nutricional — Resoluciones 810/2021 y 2492/2022</b>", style_header))
     story.append(Spacer(1, 3*mm))
     fecha_str = datetime.now().strftime("%Y-%m-%d")
     invima_str = invima_num or "-"
@@ -359,50 +450,15 @@ def generar_pdf(df: pd.DataFrame, producto: str, proveedor: str, responsable: st
     ]))
     story.append(tbl)
 
-    # Bloque de evidencias fotográficas (solo para ítems 'No cumple')
-    # Cada ítem inicia con un subtítulo y sus imágenes (escaladas). Se parte página si es necesario.
-    evidencias_total = sum(len(v) for v in st.session_state.evidence.values())
-    no_cumple_items = [k for k,v in st.session_state.status.items() if v == "no" and len(st.session_state.evidence.get(k,[]))>0]
-    if evidencias_total > 0 and len(no_cumple_items)>0:
-        story.append(PageBreak())
-        story.append(Paragraph("<b>Evidencia fotográfica de incumplimientos</b>", style_header))
-        story.append(Spacer(1, 3*mm))
-
-        max_img_width = 120*mm  # dos por fila si se desea (aquí una por fila por claridad)
-        for titulo in no_cumple_items:
-            story.append(Spacer(1, 2*mm))
-            story.append(Paragraph(f"<b>Ítem:</b> {titulo}", style_header))
-            ev_list = st.session_state.evidence.get(titulo, [])
-            for ev in ev_list:
-                # Cargar la imagen desde bytes y escalar
-                img_buf = BytesIO(ev["bytes"])
-                try:
-                    img = RLImage(img_buf)
-                    # Escala manteniendo proporción al ancho fijo
-                    iw, ih = img.drawWidth, img.drawHeight
-                    scale = max_img_width / iw if iw > 0 else 1.0
-                    img.drawWidth = max_img_width
-                    img.drawHeight = ih * scale
-                    story.append(img)
-                except Exception:
-                    # Si no se puede renderizar, se ignora esa imagen
-                    story.append(Paragraph("(No se pudo renderizar la imagen adjunta)", style_cell))
-                # Pie de foto
-                if ev["caption"]:
-                    story.append(Paragraph(ev["caption"], style_cell))
-                story.append(Spacer(1, 3*mm))
-
+    # No añadimos visualizaciones al PDF (solo interfaz)
     doc.build(story)
     buf.seek(0)
     return buf
 
-# ------------------------------------------------------------------
-# Botón: Generar PDF
-# ------------------------------------------------------------------
 st.subheader("Generar informe PDF (A4 horizontal)")
 if st.button("Generar PDF"):
-    yes_count = sum(1 for v in st.session_state.status.values() if v == "yes")
-    no_count = sum(1 for v in st.session_state.status.values() if v == "no")
+    yes_count = sum(1 for v in st.session_state.status_810.values() if v == "yes")
+    no_count = sum(1 for v in st.session_state.status_810.values() if v == "no")
     answered_count = yes_count + no_count
     percent = round((yes_count / answered_count * 100), 1) if answered_count > 0 else 0.0
 
@@ -410,5 +466,5 @@ if st.button("Generar PDF"):
         df, producto, proveedor, responsable, categoria_producto,
         invima_num, invima_url, invima_estado_ok, percent, nombre_pdf
     )
-    file_name = (nombre_pdf.strip() or f"informe_5109_{datetime.now().strftime('%Y%m%d')}") + ".pdf"
+    file_name = (nombre_pdf.strip() or f"informe_810_2492_{datetime.now().strftime('%Y%m%d')}") + ".pdf"
     st.download_button("Descargar PDF", data=pdf_buffer, file_name=file_name, mime="application/pdf")
