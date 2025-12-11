@@ -175,7 +175,7 @@ def _wrap(text: str, chunk: int = 110) -> str:
 # ===========================================
 # UI — CHECKLIST
 # ===========================================
-st.header("Checklist por etapas — Resolución 5109/2005 (v5)")
+st.header("Checklist — Resolución 5109/2005")
 st.markdown("Responde con ✅ Cumple / ❌ No cumple / ⚪ No aplica. Si marcas **No cumple**, podrás **adjuntar evidencia**.")
 
 for categoria, items in CATEGORIAS.items():
