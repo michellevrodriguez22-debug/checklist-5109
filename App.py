@@ -348,7 +348,7 @@ def generar_pdf():
 # ===========================================
 # EXPORTAR PDF
 # ===========================================
-st.subheader("Generar informe PDF (A4 horizontal)")
+st.subheader("Generar informe PDF")
 if st.button("Generar PDF"):
     pdf_buffer = generar_pdf()
     file_name = (nombre_pdf.strip() or f"informe_5109_v5_{datetime.now().strftime('%Y%m%d')}") + ".pdf"
