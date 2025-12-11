@@ -149,7 +149,7 @@ CATEGORIAS = {
         ("Soportes regulatorios disponibles",
          "Confirmar si el proveedor cuenta con ficha técnica, análisis bromatológicos, estudio de vida útil, arte aprobado y registro sanitario; "
          "verificar que todos coincidan entre sí y con el producto evaluado, según aplique.",
-         "Control de documentación, "Producto terminado y Materia Prima"),
+         "Control de documentación", "Producto terminado y Materia Prima"),
         ("Fichas técnicas y especificaciones",
          "Asegurar que las fichas estén actualizadas y coherentes con lo declarado en el rótulo.",
          "Control de documentación", "Producto terminado y Materia Prima"),
