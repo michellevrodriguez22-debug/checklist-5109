@@ -24,7 +24,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 # CONFIG INICIAL
 # ===========================================
 st.set_page_config(page_title="Checklist Rotulado — Resolución 5109/2005 (v5)", layout="wide")
-st.title("Checklist de Rotulado — Resolución 5109 de 2005 (Colombia) — Versión 5")
+st.title("Checklist de Rotulado — Resolución 5109 de 2005")
 
 # ===========================================
 # SIDEBAR / DATOS GENERALES
