@@ -80,13 +80,13 @@ CATEGORIAS = {
         ("Lote impreso en el empaque (trazabilidad)",
          "Debe estar impreso, legible e indeleble. Ejemplos de formato válido (referenciales): "
          "L230401, LOTE230401",
-         "Resolución 5109/2005 Art. 5.5", "Ambos"),
+         "Resolución 5109/2005 Art. 5.5", "Producto terminado y Materia Prima"),
         ("Fecha de vencimiento o duración mínima impresa",
          "Debe ser clara y legible. Ejemplos de formato válido (según caso): "
          "DD/MM/AAAA, DD-MM-AAAA, o MMM/AAAA (duración mínima). "
          "Fecha límite de consumo recomendada, Fecha de caducidad, Fecha de vencimiento (F. Vto.), "
          "Vence (Ven.), Expira (Exp.), Consumase antes de.",
-         "Resolución 5109/2005 Art. 5.5.", "Ambos"),
+         "Resolución 5109/2005 Art. 5.5.", "Producto terminado y Materia Prima"),
     ],
 
     # 3) Cara posterior
