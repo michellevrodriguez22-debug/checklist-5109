@@ -47,13 +47,12 @@ solo_no             = st.sidebar.checkbox("Mostrar solo 'No cumple'", value=Fals
 CATEGORIAS = {
     # 1) INVIMA
     "1. Verificación con INVIMA (registro sanitario)": [
-        ("Registro sanitario INVIMA impreso, vigente y coherente con la información del producto",
- "Verificar que el número de registro sanitario INVIMA esté impreso en el empaque, sea visible, legible e indeleble; "
- "que se encuentre vigente y ACTIVO en el portal del INVIMA; y que la información del rótulo coincida con la ficha del registro "
- "y la ficha técnica del producto, incluyendo como mínimo: nombre del producto, denominación, marca y presentaciones autorizadas. "
- "La información declarada no debe ser falsa, equívoca o engañosa, ni inducir a error sobre la naturaleza, origen, composición "
- "o calidad del alimento.",
- "Resolución 5109/2005 Art. 5.8 y Art. 4 (requisitos generales).",
+        ("Registro sanitario INVIMA impreso, vigente y coherente con el producto",
+ "Verificar que el número de registro sanitario INVIMA esté impreso en el empaque de forma visible, legible e indeleble; "
+ "que se encuentre vigente y ACTIVO según la consulta en el portal del INVIMA; y que la información declarada en el rótulo "
+ "coincida con la ficha del registro y la ficha técnica del producto, incluyendo nombre del producto, denominación, marca "
+ "y presentaciones autorizadas.",
+ "Resolución 5109/2005 Art. 5.8.",
  "Producto terminado"),
         ("Nombre y dirección del responsable (fabricante/importador/reenvasador)",
          "Declarar razón social, dirección completa, teléfono y página web del responsable. "
