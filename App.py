@@ -121,9 +121,6 @@ CATEGORIAS = {
 
     # 7) Condiciones particulares
     "7. Condiciones particulares": [
-        ("Producto importado — rótulo complementario",
-         "Si la etiqueta original no está en español o falta información obligatoria, adherir rótulo complementario completo.",
-         "Resolución 5109/2005 Art. 4.4.", "Producto terminado y Materia Prima"),
         ("Producto reenvasado (establecimiento autorizado)",
          "Conservar la información original e incluir responsable del reenvasado con dirección.",
          "Resolución 5109/2005 Art. 5.4", "Producto reenvasado"),
