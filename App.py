@@ -63,11 +63,10 @@ CATEGORIAS = {
     ],
 
     "2. Nombre del alimento": [
-     ("Denominación del alimento (verdadera naturaleza)",
-      "Verificar que la denominación del alimento refleje de manera clara y veraz su verdadera naturaleza, sin inducir a error o engaño al consumidor. El nombre debe ser específico y no genérico; cuando exista una denominación establecida en la legislación sanitaria, se debe emplear al menos una de ellas. En ausencia de denominación legal, se debe utilizar una denominación común o usual reconocida por el uso corriente, descriptiva y no engañosa. La marca, nombre de fantasía, nombre de fábrica o marca registrada no sustituye la denominación del alimento y solo puede emplearse acompañada de la denominación legal o común, visible en la cara principal de exhibición. Junto al nombre del alimento, en la cara principal del rótulo, deben incluirse las palabras o frases necesarias para evitar inducir a error respecto a su naturaleza o condición.",
-      "Resolución 5109 de 2005, Artículos 5.1, 5.1.1 y 5.1.2"
-      "Producto terminado y Materia Prima")
-
+        ("Denominación del alimento (verdadera naturaleza)",
+         "Verificar que la denominación del alimento refleje de manera clara y veraz su verdadera naturaleza, sin inducir a error o engaño al consumidor. El nombre debe ser específico y no genérico; cuando exista una denominación establecida en la legislación sanitaria, se debe emplear al menos una de ellas. En ausencia de denominación legal, se debe utilizar una denominación común o usual reconocida por el uso corriente, descriptiva y no engañosa. La marca, nombre de fantasía, nombre de fábrica o marca registrada no sustituye la denominación del alimento y solo puede emplearse acompañada de la denominación legal o común, visible en la cara principal de exhibición. Junto al nombre del alimento, en la cara principal del rótulo, deben incluirse las palabras o frases necesarias para evitar inducir a error respecto a su naturaleza o condición.",
+         "Resolución 5109 de 2005, Artículos 5.1, 5.1.1 y 5.1.2",
+         "Producto terminado y Materia Prima")
     ],
          
     "3. Lista de ingredientes": [
