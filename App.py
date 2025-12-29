@@ -48,82 +48,78 @@ CATEGORIAS = {
     # 1) INVIMA
     "1. Verificación con INVIMA (registro sanitario)": [
         ("Registro sanitario INVIMA impreso, vigente y coherente con el producto",
-        "Verificar que el número de registro sanitario INVIMA esté impreso en el empaque de forma visible, legible e indeleble; "
+        "Verificar que el número de registro sanitario INVIMA esté impreso en el empaque de forma visible, legible e indeleble, además que incluya la marca Juan Valdez (Cuanodo aplique); "
         "que se encuentre vigente y ACTIVO según la consulta en el portal del INVIMA; y que la información declarada en el rótulo "
         "coincida con la ficha del registro y la ficha técnica del producto, incluyendo nombre del producto, denominación, marca "
         "y presentaciones autorizadas.",
         "Resolución 5109/2005 Art. 5.8.",
         "Producto terminado"),
-        ("Nombre y dirección del responsable (fabricante/importador/reenvasador)",
-         "Declarar razón social, dirección completa, teléfono y página web del responsable. "
-         "Si el producto se fabrica para otra empresa, incluir expresamente: "
-         "‘Elaborado para: [nombre]’ y ‘Por: [nombre del fabricante]’.",
-         "Resolución 5109/2005 Art. 5.4.1 y 5.4.2.", "Producto terminado y Materia Prima"),
         ("País de origen",
          "Declarar “Hecho en …” o “Producto de …” cuando aplique.",
          "Resolución 5109/2005 Art. 5.4.2.", "Producto terminado y Materia Prima"),
         ("Presentación y contenido autorizados",
          "La presentación (peso/volumen) declarada debe estar autorizada en el registro sanitario.",
-         "Resolución 5109/2005 Art. 5.8.", "Producto terminado"),
+         "Resolución 5109/2005 Art. 5.8.", "Producto terminado")
     ],
 
-    # 2) Cara frontal
-    "2. Revisión de la cara frontal": [
-        ("Denominación del alimento (verdadera naturaleza)",
-         "Debe reflejar la verdadera naturaleza del producto; la marca no sustituye la denominación.",
-         "Resolución 5109/2005 Art. 5.1 y 5.1.1.", "Producto terminado y Materia Prima"),
-        ("Contenido neto en cara principal con unidades SI",
-         "Declarar contenido neto en la cara principal, usando unidades SI (g, kg, mL, L), legible y sin incluir el envase.",
-         "Resolución 5109/2005 Art. 5.3", "Producto terminado y Materia Prima"),
+    "2. Nombre del alimento": [
+     ("Denominación del alimento (verdadera naturaleza)",
+      "Verificar que la denominación del alimento refleje de manera clara y veraz su verdadera naturaleza, sin inducir a error o engaño al consumidor. El nombre debe ser específico y no genérico; cuando exista una denominación establecida en la legislación sanitaria, se debe emplear al menos una de ellas. En ausencia de denominación legal, se debe utilizar una denominación común o usual reconocida por el uso corriente, descriptiva y no engañosa. La marca, nombre de fantasía, nombre de fábrica o marca registrada no sustituye la denominación del alimento y solo puede emplearse acompañada de la denominación legal o común, visible en la cara principal de exhibición. Junto al nombre del alimento, en la cara principal del rótulo, deben incluirse las palabras o frases necesarias para evitar inducir a error respecto a su naturaleza o condición.",
+      "Resolución 5109 de 2005, Artículos 5.1, 5.1.1 y 5.1.2")
+
+    ],
+         
+    "3. Lista de ingredientes": [
+         ("Lista de ingredientes en orden decreciente",
+          "Que se listen todos los ingredientes en orden decreciente de peso al momento de fabricación. Además debe decir Ingredientes: Seguido de la mención de ellos",
+          "Resolución 5109/2005 Art. 5.2.", "Producto terminado y Materia Prima"),
+         ("Aditivos alimentarios con función y nombre específico",
+          "Que se declaren aditivos con categoría funcional y nombre específico (p. ej., Conservante (Sorbato de potasio)).",
+          "Resolución 5109/2005 Art. 5.2.3.", "Producto terminado y Materia Prima"),
+         ("Declaración de alérgenos",
+          "Que se indiquen alérgenos cuando apliquen: gluten (trigo/cebada/centeno/avena), huevo, leche (incl. lactosa), "
+          "soya, maní, frutos secos, pescado, crustáceos, mostaza, apio, sésamo, sulfitos ≥10 mg/kg.",
+          "Resolución 5109/2005 Art. 5.2.4.", "Producto terminado y Materia Prima")
+    ],
+
+    "4. Contenido neto y peso escurrido": [
+         ("Contenido neto en cara principal con unidades SI",
+          "Que se declare el contenido neto en la cara principal de exhibición, utilizando unidades del Sistema Internacional (g, kg, mL, L), de forma legible, clara y sin incluir el peso o volumen del envase. Cuando se trate de un producto terminado, verificar adicionalmente que se declare el número de porciones conforme a la normativa aplicable.",
+          "Resolución 5109/2005 Art. 5.3", "Producto terminado y Materia Prima")
+    ],
+
+    # 5) Cara frontal
+    "5. Revisión de la cara frontal": [
+        ("Nombre y dirección del responsable (fabricante / importador / reenvasador)",
+         "Que se Declare la razón social y la dirección completa del responsable del alimento, de forma clara y legible. Utilizar exactamente las expresiones establecidas en la normativa según corresponda: “FABRICADO o ENVASADO POR”, o “FABRICADO, ENVASADO O REEMPACADO POR (FABRICANTE, ENVASADOR O REEMPACADOR) PARA: (PERSONA NATURAL O JURÍDICA AUTORIZADA PARA COMERCIALIZAR EL ALIMENTO)”. Para **producto terminado**, verificar que esta identificación coincida con el registro sanitario INVIMA, adicionalmente, que declare información de contacto la cual facilita la trazabilidad y comunicación, como teléfono, correo electrónico u otros datos de contacto del proveedor o fabricante, en coherencia con la documentación sanitaria y comercial.",
+         "Resolución 5109 de 2005, Art. 5.3; Resolución 810 de 2021; Resolución 2492 de 2022; Ley 1480 de 2011", "Producto terminado y Materia Prima"),
         ("Lote impreso en el empaque (trazabilidad)",
-         "Debe estar impreso, legible e indeleble. Ejemplos de formato válido (referenciales): "
+         "Que este impreso, legible e indeleble. Ejemplos de formato válido (referenciales): "
          "L230401, LOTE230401",
          "Resolución 5109/2005 Art. 5.5", "Producto terminado y Materia Prima"),
         ("Fecha de vencimiento o duración mínima impresa",
-         "Debe ser clara y legible. Ejemplos de formato válido (según caso): "
+         "Que sea clara, legible y se encuentre en el empaque. Ejemplos de formato válido (según caso): "
          "DD/MM/AAAA, DD-MM-AAAA, o MMM/AAAA (duración mínima). "
          "Fecha límite de consumo recomendada, Fecha de caducidad, Fecha de vencimiento (F. Vto.), "
          "Vence (Ven.), Expira (Exp.), Consumase antes de.",
          "Resolución 5109/2005 Art. 5.5.", "Producto terminado y Materia Prima"),
     ],
 
-    # 3) Cara posterior
-    "3. Revisión de la cara posterior": [
-        ("Lista de ingredientes en orden decreciente",
-         "Listar todos los ingredientes en orden decreciente de peso al momento de fabricación.",
-         "Resolución 5109/2005 Art. 5.2.", "Producto terminado y Materia Prima"),
-        ("Aditivos alimentarios con función y nombre específico",
-         "Declarar aditivos con categoría funcional y nombre específico (p. ej., Conservante (Sorbato de potasio)).",
-         "Resolución 5109/2005 Art. 5.2.3.", "Producto terminado y Materia Prima"),
-        ("Declaración de alérgenos",
-         "Indicar alérgenos cuando apliquen: gluten (trigo/cebada/centeno/avena), huevo, leche (incl. lactosa), "
-         "soya, maní, frutos secos, pescado, crustáceos, mostaza, apio, sésamo, sulfitos ≥10 mg/kg.",
-         "Resolución 5109/2005 Art. 5.2.4.", "Producto terminado y Materia Prima"),
-        ("Condiciones de conservación (cuando corresponda)",
+    # 6) Cara posterior
+    "6. Revisión de la cara posterior": [
+        ("Condiciones de conservación",
          "Declarar condiciones especiales de conservación para preservar inocuidad y vida útil (p. ej., refrigeración a 4 °C).",
          "Resolución 5109/2005 Art. 5.9.1 y 5.9.2.", "Producto terminado y Materia Prima"),
-        ("Instrucciones de uso/preparación (cuando corresponda)",
-         "Incluir instrucciones necesarias para el uso seguro y adecuado (p. ej., “Agítese antes de usar”).",
-         "Resolución 5109/2005 Art. 5.9.", "Producto terminado"),
-        ("Modo de consumo o instrucciones de consumo",
-         "Indicar la forma adecuada de consumo cuando aplique (p. ej., ‘Listo para consumir’, ‘Servir frío’, "
-         "‘Agregar agua antes de usar’, ‘Porción sugerida’).",
-         "Resolución 5109/2005 Art. 5.9.2", "Producto terminado"),
+        ("Instrucciones de uso, preparación y consumo (cuando aplique)",
+         "Incluir instrucciones claras y suficientes para el uso, preparación y consumo seguro y adecuado del alimento, cuando corresponda. Indicar de forma expresa la manera correcta de consumo o preparación (por ejemplo: “Agítese antes de usar”, “Listo para consumir”, “Servir frío”, “Agregar agua antes de usar”, “Porción sugerida”), asegurando que la información sea comprensible para el consumidor.",
+         "Resolución 5109 de 2005, Artículos 5.9 y 5.9.2"),
         ("Idioma en español (o rótulo complementario si es importado)",
          "Toda la información obligatoria debe estar en español; en importados, adherir rótulo complementario traducido.",
-         "Resolución 5109/2005 Art. 4.4", "Producto terminado y Materia Prima"),
+         "Resolución 5109/2005 Art. 4.4", "Producto terminado y Materia Prima")
     ],
 
-    # 4) Claridad / Legibilidad / Veracidad — Unificado
-    "4. Claridad, legibilidad y veracidad de la información": [
-        ("Claridad, legibilidad y veracidad del rótulo",
-         "Toda la información del rótulo (frontal y posterior) debe ser legible, indeleble y veraz, sin inducir a error "
-         "sobre naturaleza, composición, cantidad o características. Incluye ubicación visible y contraste adecuado.",
-         "Resolución 5109/2005 Art. 4.1", "Producto terminado y Materia Prima"),
-    ],
-
-    # 5) Condiciones particulares
-    "5. Condiciones particulares": [
+    # 7) Condiciones particulares
+    "7. Condiciones particulares": [
         ("Producto importado — rótulo complementario",
          "Si la etiqueta original no está en español o falta información obligatoria, adherir rótulo complementario completo.",
          "Resolución 5109/2005 Art. 4.4.", "Producto terminado y Materia Prima"),
@@ -140,17 +136,6 @@ CATEGORIAS = {
         ("Multipacks o envases secundarios",
          "El envase secundario debe repetir la información esencial o referir claramente al envase primario.",
          "Criterio práctico de información al consumidor.", "Producto terminado"),
-    ],
-
-    # 6) Evidencia documental y control
-    "6. Evidencia documental y control": [
-        ("Soportes regulatorios disponibles",
-         "Confirmar si el proveedor cuenta con ficha técnica, análisis bromatológicos, estudio de vida útil, arte aprobado y registro sanitario; "
-         "verificar que todos coincidan entre sí y con el producto evaluado, según aplique.",
-         "Control de documentación", "Producto terminado y Materia Prima"),
-        ("Fichas técnicas y especificaciones",
-         "Asegurar que las fichas estén actualizadas y coherentes con lo declarado en el rótulo.",
-         "Control de documentación", "Producto terminado y Materia Prima"),
     ],
 }
 
