@@ -65,7 +65,8 @@ CATEGORIAS = {
     "2. Nombre del alimento": [
      ("Denominación del alimento (verdadera naturaleza)",
       "Verificar que la denominación del alimento refleje de manera clara y veraz su verdadera naturaleza, sin inducir a error o engaño al consumidor. El nombre debe ser específico y no genérico; cuando exista una denominación establecida en la legislación sanitaria, se debe emplear al menos una de ellas. En ausencia de denominación legal, se debe utilizar una denominación común o usual reconocida por el uso corriente, descriptiva y no engañosa. La marca, nombre de fantasía, nombre de fábrica o marca registrada no sustituye la denominación del alimento y solo puede emplearse acompañada de la denominación legal o común, visible en la cara principal de exhibición. Junto al nombre del alimento, en la cara principal del rótulo, deben incluirse las palabras o frases necesarias para evitar inducir a error respecto a su naturaleza o condición.",
-      "Resolución 5109 de 2005, Artículos 5.1, 5.1.1 y 5.1.2")
+      "Resolución 5109 de 2005, Artículos 5.1, 5.1.1 y 5.1.2"
+      "Producto terminado y Materia Prima")
 
     ],
          
@@ -112,7 +113,8 @@ CATEGORIAS = {
          "Resolución 5109/2005 Art. 5.9.1 y 5.9.2.", "Producto terminado y Materia Prima"),
         ("Instrucciones de uso, preparación y consumo (cuando aplique)",
          "Incluir instrucciones claras y suficientes para el uso, preparación y consumo seguro y adecuado del alimento, cuando corresponda. Indicar de forma expresa la manera correcta de consumo o preparación (por ejemplo: “Agítese antes de usar”, “Listo para consumir”, “Servir frío”, “Agregar agua antes de usar”, “Porción sugerida”), asegurando que la información sea comprensible para el consumidor.",
-         "Resolución 5109 de 2005, Artículos 5.9 y 5.9.2"),
+         "Resolución 5109 de 2005, Artículos 5.9 y 5.9.2",
+         "Producto terminado"),
         ("Idioma en español (o rótulo complementario si es importado)",
          "Toda la información obligatoria debe estar en español; en importados, adherir rótulo complementario traducido.",
          "Resolución 5109/2005 Art. 4.4", "Producto terminado y Materia Prima")
