@@ -160,23 +160,22 @@ for categoria, items in CATEGORIAS.items():
 
         if titulo == "Registro sanitario INVIMA impreso, vigente y coherente con el producto":
             st.markdown("#### Mini checklist — Verificación INVIMA")
-
-checks_invima = {
-    "Registro sanitario INVIMA impreso en el empaque de forma visible, legible e indeleble": False,
-    "Registro sanitario vigente y en estado ACTIVO según portal INVIMA": False,
-    "Marca declarada coincide con la registrada ante INVIMA (cuando aplique)": False,
-    "Nombre del producto coincide con la ficha del registro sanitario": False,
-    "Denominación del alimento corresponde a su verdadera naturaleza": False,
-    "La marca o nombre de fantasía no sustituye la denominación del alimento": False,
-    "Denominación visible en la cara principal de exhibición": False,
-    "Presentaciones comerciales coinciden con las autorizadas en el registro": False,
-}
-
-for check in checks_invima:
-    checks_invima[check] = st.checkbox(
-        check,
-        key=f"invima_{check}"
-    )
+            checks_invima = {
+               "Registro sanitario INVIMA impreso en el empaque de forma visible, legible e indeleble": False,
+               "Registro sanitario vigente y en estado ACTIVO según portal INVIMA": False,
+               "Marca declarada coincide con la registrada ante INVIMA (cuando aplique)": False,
+               "Nombre del producto coincide con la ficha del registro sanitario": False,
+               "Denominación del alimento corresponde a su verdadera naturaleza": False,
+               "La marca o nombre de fantasía no sustituye la denominación del alimento": False,
+               "Denominación visible en la cara principal de exhibición": False,
+               "Presentaciones comerciales coinciden con las autorizadas en el registro": False,
+            }
+            
+            for check in checks_invima:
+                checks_invima[check] = st.checkbox(
+                    check,
+                    key=f"invima_{check}"
+                )
 
         if titulo == "Contenido neto en cara principal con unidades SI":
             st.markdown("#### Anexo — Altura mínima de números y letras del contenido neto (Res. 5109/2005)")
