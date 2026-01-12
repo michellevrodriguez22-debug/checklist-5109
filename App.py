@@ -168,6 +168,32 @@ for categoria, items in CATEGORIAS.items():
         st.markdown(f"**Referencia normativa:** {referencia}")
         st.caption(f"Aplica a: {aplica}")
 
+        if titulo == "Contenido neto en cara principal con unidades SI":
+            st.markdown("#### Anexo — Altura mínima de números y letras del contenido neto (Res. 5109/2005)")
+            st.markdown("""
+            **a) Según el área de la cara principal de exhibición**
+
+| Área de la cara principal (cm²) | Altura mínima números y letras (impreso / adhesivo) | Altura mínima rótulo soplado, formado o moldeado |
+|-------------------------------|-----------------------------------------------------|--------------------------------------------------|
+| Hasta 16                      | 2 mm                                                | 3 mm                                             |
+| > 16 a 100                    | 3 mm                                                | 4 mm                                             |
+| > 100 a 225                   | 4 mm                                                | 6 mm                                             |
+| > 225 a 400                   | 5 mm                                                | 7 mm                                             |
+| > 400 a 625                   | 7 mm                                                | 8 mm                                             |
+| > 625 a 900                   | 9 mm                                                | 9 mm                                             |
+| > 900                         | Proporcional (≥ 9 mm)                               | Proporcional (≥ 9 mm)                            |
+""")
+            st.markdown("""
+**b) Criterio técnico de referencia internacional — Directiva 76/211/EEC (Unión Europea)**  
+*(Referencia informativa; no sustituye la Resolución 5109/2005)*
+
+| Contenido neto | Altura mínima de números y letras |
+|---------------|-----------------------------------|
+| ≤ 200 g o mL  | 3 mm                              |
+| > 200 g o mL hasta 1 kg o L       | 4 mm                              |
+| > 1 kg o L    | 6 mm                              |
+""")
+
         c1, c2, c3, _ = st.columns([0.12, 0.12, 0.12, 0.64])
         with c1:
             if st.button("✅ Cumple", key=f"{titulo}_yes"):
