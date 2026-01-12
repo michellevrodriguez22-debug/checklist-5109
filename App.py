@@ -48,21 +48,11 @@ CATEGORIAS = {
     # 1) INVIMA
     "1. Verificación con INVIMA (registro sanitario)": [
         ("Registro sanitario INVIMA impreso, vigente y coherente con el producto",
-        "Verificar que el número de registro sanitario INVIMA esté impreso en el empaque de forma visible, legible e indeleble, además que incluya la marca Juan Valdez (Cuanodo aplique); "
-        "que se encuentre vigente y ACTIVO según la consulta en el portal del INVIMA; y que la información declarada en el rótulo "
-        "coincida con la ficha del registro y la ficha técnica del producto, incluyendo nombre del producto, denominación, marca "
-        "y presentaciones autorizadas.",
+        "Verificar con el siguiente checklist.",
         "Resolución 5109/2005 Art. 5.8.",
         "Producto terminado")
     ],
-
-    "2. Nombre del alimento": [
-        ("Denominación del alimento (verdadera naturaleza)",
-         "Verificar que la denominación del alimento refleje de manera clara y veraz su verdadera naturaleza, sin inducir a error o engaño al consumidor. El nombre debe ser específico y no genérico; cuando exista una denominación establecida en la legislación sanitaria, se debe emplear al menos una de ellas. En ausencia de denominación legal, se debe utilizar una denominación común o usual reconocida por el uso corriente, descriptiva y no engañosa. La marca, nombre de fantasía, nombre de fábrica o marca registrada no sustituye la denominación del alimento y solo puede emplearse acompañada de la denominación legal o común, visible en la cara principal de exhibición. Junto al nombre del alimento, en la cara principal del rótulo, deben incluirse las palabras o frases necesarias para evitar inducir a error respecto a su naturaleza o condición.",
-         "Resolución 5109 de 2005, Artículos 5.1, 5.1.1 y 5.1.2",
-         "Producto terminado y Materia Prima")
-    ],
-         
+    
     "3. Lista de ingredientes": [
          ("Lista de ingredientes en orden decreciente",
           "Que se listen todos los ingredientes en orden decreciente de peso al momento de fabricación. Además debe decir Ingredientes: Seguido de la mención de ellos",
@@ -84,9 +74,6 @@ CATEGORIAS = {
 
     # 5) Cara frontal
     "5. Revisión de la cara frontal": [
-        ("País de origen",
-         "Declarar “Hecho en …” o “Producto de …” cuando aplique.",
-         "Resolución 5109/2005 Art. 5.4.2.", "Producto terminado y Materia Prima"),
         ("Lote impreso en el empaque (trazabilidad)",
          "Que este impreso, legible e indeleble. Ejemplos de formato válido (referenciales): "
          "L230401, LOTE230401",
@@ -101,6 +88,9 @@ CATEGORIAS = {
 
     # 6) Cara posterior
     "6. Revisión de la cara posterior": [
+        ("País de origen",
+         "Declarar “Hecho en …” o “Producto de …” cuando aplique.",
+         "Resolución 5109/2005 Art. 5.4.2.", "Producto terminado y Materia Prima"),
         ("Condiciones de conservación",
          "Declarar condiciones especiales de conservación para preservar inocuidad y vida útil (p. ej., refrigeración a 4 °C).",
          "Resolución 5109/2005 Art. 5.9.1 y 5.9.2.", "Producto terminado y Materia Prima"),
@@ -167,6 +157,26 @@ for categoria, items in CATEGORIAS.items():
         st.markdown(f"**Qué verificar:** {que_verificar}")
         st.markdown(f"**Referencia normativa:** {referencia}")
         st.caption(f"Aplica a: {aplica}")
+
+        if titulo == "Registro sanitario INVIMA impreso, vigente y coherente con el producto":
+            st.markdown("#### Mini checklist — Verificación INVIMA")
+
+checks_invima = {
+    "Registro sanitario INVIMA impreso en el empaque de forma visible, legible e indeleble": False,
+    "Registro sanitario vigente y en estado ACTIVO según portal INVIMA": False,
+    "Marca declarada coincide con la registrada ante INVIMA (cuando aplique)": False,
+    "Nombre del producto coincide con la ficha del registro sanitario": False,
+    "Denominación del alimento corresponde a su verdadera naturaleza": False,
+    "La marca o nombre de fantasía no sustituye la denominación del alimento": False,
+    "Denominación visible en la cara principal de exhibición": False,
+    "Presentaciones comerciales coinciden con las autorizadas en el registro": False,
+}
+
+for check in checks_invima:
+    checks_invima[check] = st.checkbox(
+        check,
+        key=f"invima_{check}"
+    )
 
         if titulo == "Contenido neto en cara principal con unidades SI":
             st.markdown("#### Anexo — Altura mínima de números y letras del contenido neto (Res. 5109/2005)")
