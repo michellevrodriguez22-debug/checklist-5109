@@ -53,19 +53,6 @@ CATEGORIAS = {
         "Producto terminado")
     ],
     
-    "3. Lista de ingredientes": [
-         ("Lista de ingredientes en orden decreciente",
-          "Que se listen todos los ingredientes en orden decreciente de peso al momento de fabricación. Además debe decir Ingredientes: Seguido de la mención de ellos",
-          "Resolución 5109/2005 Art. 5.2.", "Producto terminado y Materia Prima"),
-         ("Aditivos alimentarios con función y nombre específico",
-          "Que se declaren aditivos con categoría funcional y nombre específico (p. ej., Conservante (Sorbato de potasio)).",
-          "Resolución 5109/2005 Art. 5.2.3.", "Producto terminado y Materia Prima"),
-         ("Declaración de alérgenos",
-          "Que se indiquen alérgenos cuando apliquen: gluten (trigo/cebada/centeno/avena), huevo, leche (incl. lactosa), "
-          "soya, maní, frutos secos, pescado, crustáceos, mostaza, apio, sésamo, sulfitos ≥10 mg/kg.",
-          "Resolución 5109/2005 Art. 5.2.4.", "Producto terminado y Materia Prima")
-    ],
-
     "4. Contenido neto y peso escurrido": [
          ("Contenido neto en cara principal con unidades SI",
           "Que se declare el contenido neto en la cara principal de exhibición, utilizando unidades del Sistema Internacional (g, kg, mL, L), de forma legible, clara y sin incluir el peso o volumen del envase. Cuando se trate de un producto terminado, verificar adicionalmente que se declare el número de porciones conforme a la normativa aplicable.",
@@ -88,6 +75,9 @@ CATEGORIAS = {
 
     # 6) Cara posterior
     "6. Revisión de la cara posterior": [
+        ("Lista de ingredientes, aditivos y declaración de alérgenos",
+          "Con ayuda del mini checklist realizar revisión",
+          "Resolución 5109/2005 Art. 5.2.", "Producto terminado y Materia Prima"),
         ("País de origen",
          "Declarar “Hecho en …” o “Producto de …” cuando aplique.",
          "Resolución 5109/2005 Art. 5.4.2.", "Producto terminado y Materia Prima"),
@@ -157,6 +147,24 @@ for categoria, items in CATEGORIAS.items():
         st.markdown(f"**Qué verificar:** {que_verificar}")
         st.markdown(f"**Referencia normativa:** {referencia}")
         st.caption(f"Aplica a: {aplica}")
+
+        if titulo == "Lista de ingredientes, aditivos y declaración de alérgenos":
+            
+            with st.expander("Desglose de verificación — Ingredientes", expanded=False):
+                
+                checklist_ingredientes = [
+                    "Lista encabezada con la palabra “Ingredientes:”",
+                    "Ingredientes declarados en orden decreciente de peso y no se omiten ingredientes presentes en la formulación",
+                    "Aditivos alimentarios declarados  ej., Conservante (Sorbato de potasio)",
+                    "Alérgenos declarados cuando aplique gluten (trigo/cebada/centeno/avena), huevo, leche (incl. lactosa), soya, maní, frutos secos, pescado, crustáceos, mostaza, apio, sésamo, sulfitos ≥10 mg/kg."
+                ]
+                
+                for item in checklist_ingredientes:
+                    st.checkbox(
+                        item,
+                        key=f"cp_ing_{item}"
+                    )
+
 
         if titulo == "Registro sanitario INVIMA impreso, vigente y coherente con el producto":
             st.markdown("#### Mini checklist — Verificación INVIMA")
