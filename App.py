@@ -53,13 +53,7 @@ CATEGORIAS = {
         "coincida con la ficha del registro y la ficha técnica del producto, incluyendo nombre del producto, denominación, marca "
         "y presentaciones autorizadas.",
         "Resolución 5109/2005 Art. 5.8.",
-        "Producto terminado"),
-        ("País de origen",
-         "Declarar “Hecho en …” o “Producto de …” cuando aplique.",
-         "Resolución 5109/2005 Art. 5.4.2.", "Producto terminado y Materia Prima"),
-        ("Presentación y contenido autorizados",
-         "La presentación (peso/volumen) declarada debe estar autorizada en el registro sanitario.",
-         "Resolución 5109/2005 Art. 5.8.", "Producto terminado")
+        "Producto terminado")
     ],
 
     "2. Nombre del alimento": [
@@ -90,9 +84,9 @@ CATEGORIAS = {
 
     # 5) Cara frontal
     "5. Revisión de la cara frontal": [
-        ("Nombre y dirección del responsable (fabricante / importador / reenvasador)",
-         "Que se Declare la razón social y la dirección completa del responsable del alimento, de forma clara y legible. Utilizar exactamente las expresiones establecidas en la normativa según corresponda: “FABRICADO o ENVASADO POR”, o “FABRICADO, ENVASADO O REEMPACADO POR (FABRICANTE, ENVASADOR O REEMPACADOR) PARA: (PERSONA NATURAL O JURÍDICA AUTORIZADA PARA COMERCIALIZAR EL ALIMENTO)”. Para **producto terminado**, verificar que esta identificación coincida con el registro sanitario INVIMA, adicionalmente, que declare información de contacto la cual facilita la trazabilidad y comunicación, como teléfono, correo electrónico u otros datos de contacto del proveedor o fabricante, en coherencia con la documentación sanitaria y comercial.",
-         "Resolución 5109 de 2005, Art. 5.3; Resolución 810 de 2021; Resolución 2492 de 2022; Ley 1480 de 2011", "Producto terminado y Materia Prima"),
+        ("País de origen",
+         "Declarar “Hecho en …” o “Producto de …” cuando aplique.",
+         "Resolución 5109/2005 Art. 5.4.2.", "Producto terminado y Materia Prima"),
         ("Lote impreso en el empaque (trazabilidad)",
          "Que este impreso, legible e indeleble. Ejemplos de formato válido (referenciales): "
          "L230401, LOTE230401",
@@ -114,6 +108,9 @@ CATEGORIAS = {
          "Incluir instrucciones claras y suficientes para el uso, preparación y consumo seguro y adecuado del alimento, cuando corresponda. Indicar de forma expresa la manera correcta de consumo o preparación (por ejemplo: “Agítese antes de usar”, “Listo para consumir”, “Servir frío”, “Agregar agua antes de usar”, “Porción sugerida”), asegurando que la información sea comprensible para el consumidor.",
          "Resolución 5109 de 2005, Artículos 5.9 y 5.9.2",
          "Producto terminado"),
+        ("Nombre y dirección del responsable (fabricante / importador / reenvasador)",
+         "Que se Declare la razón social y la dirección completa del responsable del alimento, de forma clara y legible. Utilizar exactamente las expresiones establecidas en la normativa según corresponda: “FABRICADO o ENVASADO POR”, o “FABRICADO, ENVASADO O REEMPACADO POR (FABRICANTE, ENVASADOR O REEMPACADOR) PARA: (PERSONA NATURAL O JURÍDICA AUTORIZADA PARA COMERCIALIZAR EL ALIMENTO)”. Para **producto terminado**, verificar que esta identificación coincida con el registro sanitario INVIMA, adicionalmente, que declare información de contacto la cual facilita la trazabilidad y comunicación, como teléfono, correo electrónico u otros datos de contacto del proveedor o fabricante, en coherencia con la documentación sanitaria y comercial.",
+         "Resolución 5109 de 2005, Art. 5.3; Resolución 810 de 2021; Resolución 2492 de 2022; Ley 1480 de 2011", "Producto terminado y Materia Prima"),
         ("Idioma en español (o rótulo complementario si es importado)",
          "Toda la información obligatoria debe estar en español; en importados, adherir rótulo complementario traducido.",
          "Resolución 5109/2005 Art. 4.4", "Producto terminado y Materia Prima")
