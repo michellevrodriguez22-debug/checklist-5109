@@ -150,7 +150,7 @@ for categoria, items in CATEGORIAS.items():
 
         if titulo == "Lista de ingredientes, aditivos y declaración de alérgenos":
             
-            with st.expander("Desglose de verificación — Ingredientes", expanded=False):
+            with st.expander("Checklist verificación — Ingredientes", expanded=False):
                 
                 checklist_ingredientes = [
                     "Lista encabezada con la palabra “Ingredientes:”",
