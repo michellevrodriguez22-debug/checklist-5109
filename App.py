@@ -53,14 +53,14 @@ CATEGORIAS = {
         "Producto terminado")
     ],
     
-    "4. Contenido neto y peso escurrido": [
+    "2. Contenido neto y peso escurrido": [
          ("Contenido neto en cara principal con unidades SI",
           "Que se declare el contenido neto en la cara principal de exhibición, utilizando unidades del Sistema Internacional (g, kg, mL, L), de forma legible, clara y sin incluir el peso o volumen del envase. Cuando se trate de un producto terminado, verificar adicionalmente que se declare el número de porciones conforme a la normativa aplicable.",
           "Resolución 5109/2005 Art. 5.3", "Producto terminado y Materia Prima")
     ],
 
     # 5) Cara frontal
-    "5. Revisión de la cara frontal": [
+    "3. Revisión de la cara frontal": [
         ("Lote impreso en el empaque (trazabilidad)",
          "Que este impreso, legible e indeleble. Ejemplos de formato válido (referenciales): "
          "L230401, LOTE230401",
@@ -74,7 +74,7 @@ CATEGORIAS = {
     ],
 
     # 6) Cara posterior
-    "6. Revisión de la cara posterior": [
+    "4. Revisión de la cara posterior": [
         ("Lista de ingredientes, aditivos y declaración de alérgenos",
           "Con ayuda del mini checklist realizar revisión",
           "Resolución 5109/2005 Art. 5.2.", "Producto terminado y Materia Prima"),
@@ -97,7 +97,7 @@ CATEGORIAS = {
     ],
 
     # 7) Condiciones particulares
-    "7. Condiciones particulares": [
+    "5. Condiciones particulares": [
         ("Producto reenvasado (establecimiento autorizado)",
          "Conservar la información original e incluir responsable del reenvasado con dirección.",
          "Resolución 5109/2005 Art. 5.4", "Producto reenvasado"),
