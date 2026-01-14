@@ -52,7 +52,7 @@ CATEGORIAS = {
         "Resolución 5109/2005 Art. 5.8.",
         "Producto terminado")
     ],
-    "2. Ingredientes: [
+    "2. Ingredientes": [
         ("Lista de ingredientes, aditivos y declaración de alérgenos",
           "Con ayuda del mini checklist realizar revisión",
           "Resolución 5109/2005 Art. 5.2.", "Producto terminado y Materia Prima")
