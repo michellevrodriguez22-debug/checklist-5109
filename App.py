@@ -52,52 +52,65 @@ CATEGORIAS = {
         "Resolución 5109/2005 Art. 5.8.",
         "Producto terminado")
     ],
+    "2. Ingredientes: [
+        ("Lista de ingredientes, aditivos y declaración de alérgenos",
+          "Con ayuda del mini checklist realizar revisión",
+          "Resolución 5109/2005 Art. 5.2.", "Producto terminado y Materia Prima")
+    ],
     
-    "2. Contenido neto y peso escurrido": [
+    "3. Contenido neto y peso escurrido": [
          ("Contenido neto en cara principal con unidades SI",
           "Que se declare el contenido neto en la cara principal de exhibición, utilizando unidades del Sistema Internacional (g, kg, mL, L), de forma legible, clara y sin incluir el peso o volumen del envase. Cuando se trate de un producto terminado, verificar adicionalmente que se declare el número de porciones conforme a la normativa aplicable.",
           "Resolución 5109/2005 Art. 5.3", "Producto terminado y Materia Prima")
     ],
 
-    # 5) Cara frontal
-    "3. Revisión de la cara frontal": [
+    "4. Información del fabricante y distribuidor": [ 
+        ("Nombre y dirección del responsable (fabricante / importador / reenvasador)",
+         "Que se Declare la razón social y la dirección completa del responsable del alimento, de forma clara y legible. Utilizar exactamente las expresiones establecidas en la normativa según corresponda: “FABRICADO o ENVASADO POR”, o “FABRICADO, ENVASADO O REEMPACADO POR (FABRICANTE, ENVASADOR O REEMPACADOR) PARA: (PERSONA NATURAL O JURÍDICA AUTORIZADA PARA COMERCIALIZAR EL ALIMENTO)”. Para **producto terminado**, verificar que declare información de contacto como teléfono, correo electrónico u otros datos de contacto del proveedor o fabricante.",
+         "Resolución 5109 de 2005, Art. 5.3; Ley 1480 de 2011", "Producto terminado y Materia Prima")
+    ],
+
+    "5. Identificación del lote": [
         ("Lote impreso en el empaque (trazabilidad)",
          "Que este impreso, legible e indeleble. Ejemplos de formato válido (referenciales): "
          "L230401, LOTE230401",
-         "Resolución 5109/2005 Art. 5.5", "Producto terminado y Materia Prima"),
+         "Resolución 5109/2005 Art. 5.5", "Producto terminado y Materia Prima")
+    ],
+    "6. Fecha de Vnecimiento": [
         ("Fecha de vencimiento o duración mínima impresa",
          "Que sea clara, legible y se encuentre en el empaque. Ejemplos de formato válido (según caso): "
          "DD/MM/AAAA, DD-MM-AAAA, o MMM/AAAA (para alimentos con más de 3 meses de vida util). "
          "Fecha límite de consumo recomendada, Fecha de caducidad, Fecha de vencimiento (F. Vto.), "
          "Vence (Ven.), Expira (Exp.), Consumase antes de.",
-         "Resolución 5109/2005 Art. 5.5.", "Producto terminado y Materia Prima"),
+         "Resolución 5109/2005 Art. 5.5.", "Producto terminado y Materia Prima")
     ],
 
-    # 6) Cara posterior
-    "4. Revisión de la cara posterior": [
-        ("Lista de ingredientes, aditivos y declaración de alérgenos",
-          "Con ayuda del mini checklist realizar revisión",
-          "Resolución 5109/2005 Art. 5.2.", "Producto terminado y Materia Prima"),
-        ("País de origen",
-         "Declarar “Hecho en …” cuando aplique.",
-         "Resolución 5109/2005 Art. 5.4.2.", "Producto terminado y Materia Prima"),
-        ("Condiciones de conservación",
-         "Declarar condiciones especiales de conservación para preservar inocuidad y vida útil (p. ej., refrigeración a 4 °C).",
-         "Resolución 5109/2005 Art. 5.9.1 y 5.9.2.", "Producto terminado y Materia Prima"),
+    "7. Instrucciones de Uso": [
         ("Instrucciones de uso, preparación y consumo (cuando aplique)",
          "Incluir instrucciones claras y suficientes para el uso, preparación y consumo seguro y adecuado del alimento, cuando corresponda. Indicar de forma expresa la manera correcta de consumo o preparación (por ejemplo: “Agítese antes de usar”, “Listo para consumir”, “Servir frío”, “Agregar agua antes de usar”, “Porción sugerida”), asegurando que la información sea comprensible para el consumidor.",
          "Resolución 5109 de 2005, Artículos 5.9 y 5.9.2",
-         "Producto terminado"),
-        ("Nombre y dirección del responsable (fabricante / importador / reenvasador)",
-         "Que se Declare la razón social y la dirección completa del responsable del alimento, de forma clara y legible. Utilizar exactamente las expresiones establecidas en la normativa según corresponda: “FABRICADO o ENVASADO POR”, o “FABRICADO, ENVASADO O REEMPACADO POR (FABRICANTE, ENVASADOR O REEMPACADOR) PARA: (PERSONA NATURAL O JURÍDICA AUTORIZADA PARA COMERCIALIZAR EL ALIMENTO)”. Para **producto terminado**, verificar que declare información de contacto como teléfono, correo electrónico u otros datos de contacto del proveedor o fabricante.",
-         "Resolución 5109 de 2005, Art. 5.3; Ley 1480 de 2011", "Producto terminado y Materia Prima"),
+         "Producto terminado")
+    ],
+
+    "8. Condiciones de Conservación": [
+         ("Condiciones de conservación",
+         "Declarar condiciones especiales de conservación para preservar inocuidad y vida útil (p. ej., refrigeración a 4 °C).",
+         "Resolución 5109/2005 Art. 5.9.1 y 5.9.2.", "Producto terminado y Materia Prima")
+    ],
+
+    "9. Origen": 
+        ("País de origen",
+         "Declarar “Hecho en …” cuando aplique.",
+         "Resolución 5109/2005 Art. 5.4.2.", "Producto terminado y Materia Prima")
+    ],
+
+    "10. Idioma":       
         ("Idioma en español (o rótulo complementario si es importado)",
          "Toda la información obligatoria debe estar en español; en importados, adherir rótulo complementario traducido.",
          "Resolución 5109/2005 Art. 4.4", "Producto terminado y Materia Prima")
     ],
 
-    # 7) Condiciones particulares
-    "5. Condiciones particulares": [
+    "11. Condiciones particulares": [
         ("Producto reenvasado (establecimiento autorizado)",
          "Conservar la información original e incluir responsable del reenvasado con dirección.",
          "Resolución 5109/2005 Art. 5.4", "Producto reenvasado"),
