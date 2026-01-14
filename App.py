@@ -306,11 +306,26 @@ def generar_pdf():
     story.append(Paragraph(f"<b>Cumplimiento (sobre ítems contestados):</b> {percent}%", style_header))
     story.append(Spacer(1, 4*mm))
 
+    if solo_no:
+        hay_no = any(v == "no" for v in st.session_state.status_5109_v5.values())
+        if not hay_no:
+            story.append(Paragraph(
+                "<b>No se registran ítems en estado NO CUMPLE.</b>",
+                style_header
+            ))
+            doc.build(story)
+            buf.seek(0)
+            return buf            
+    
     # Tabla
     data = [["Ítem", "Estado", "Observación", "Referencia"]]
     for items in CATEGORIAS.values():
         for (titulo, _, referencia, _) in items:
             estado_val = st.session_state.status_5109_v5.get(titulo, "none")
+
+            if solo_no and estado_val != "no":
+                continue
+                
             estado_humano = (
                 "Cumple" if estado_val == "yes"
                 else "No cumple" if estado_val == "no"
