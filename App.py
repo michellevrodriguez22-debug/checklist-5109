@@ -76,7 +76,7 @@ CATEGORIAS = {
          "L230401, LOTE230401",
          "Resolución 5109/2005 Art. 5.5", "Producto terminado y Materia Prima")
     ],
-    "6. Fecha de Vnecimiento": [
+    "6. Fecha de Vencimiento": [
         ("Fecha de vencimiento o duración mínima impresa",
          "Que sea clara, legible y se encuentre en el empaque. Ejemplos de formato válido (según caso): "
          "DD/MM/AAAA, DD-MM-AAAA, o MMM/AAAA (para alimentos con más de 3 meses de vida util). "
