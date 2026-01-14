@@ -67,7 +67,7 @@ CATEGORIAS = {
          "Resolución 5109/2005 Art. 5.5", "Producto terminado y Materia Prima"),
         ("Fecha de vencimiento o duración mínima impresa",
          "Que sea clara, legible y se encuentre en el empaque. Ejemplos de formato válido (según caso): "
-         "DD/MM/AAAA, DD-MM-AAAA, o MMM/AAAA (duración mínima). "
+         "DD/MM/AAAA, DD-MM-AAAA, o MMM/AAAA (para alimentos con más de 3 meses de vida util). "
          "Fecha límite de consumo recomendada, Fecha de caducidad, Fecha de vencimiento (F. Vto.), "
          "Vence (Ven.), Expira (Exp.), Consumase antes de.",
          "Resolución 5109/2005 Art. 5.5.", "Producto terminado y Materia Prima"),
@@ -79,7 +79,7 @@ CATEGORIAS = {
           "Con ayuda del mini checklist realizar revisión",
           "Resolución 5109/2005 Art. 5.2.", "Producto terminado y Materia Prima"),
         ("País de origen",
-         "Declarar “Hecho en …” o “Producto de …” cuando aplique.",
+         "Declarar “Hecho en …” cuando aplique.",
          "Resolución 5109/2005 Art. 5.4.2.", "Producto terminado y Materia Prima"),
         ("Condiciones de conservación",
          "Declarar condiciones especiales de conservación para preservar inocuidad y vida útil (p. ej., refrigeración a 4 °C).",
@@ -90,7 +90,7 @@ CATEGORIAS = {
          "Producto terminado"),
         ("Nombre y dirección del responsable (fabricante / importador / reenvasador)",
          "Que se Declare la razón social y la dirección completa del responsable del alimento, de forma clara y legible. Utilizar exactamente las expresiones establecidas en la normativa según corresponda: “FABRICADO o ENVASADO POR”, o “FABRICADO, ENVASADO O REEMPACADO POR (FABRICANTE, ENVASADOR O REEMPACADOR) PARA: (PERSONA NATURAL O JURÍDICA AUTORIZADA PARA COMERCIALIZAR EL ALIMENTO)”. Para **producto terminado**, verificar que declare información de contacto como teléfono, correo electrónico u otros datos de contacto del proveedor o fabricante.",
-         "Resolución 5109 de 2005, Art. 5.3; Resolución 810 de 2021; Resolución 2492 de 2022; Ley 1480 de 2011", "Producto terminado y Materia Prima"),
+         "Resolución 5109 de 2005, Art. 5.3; Ley 1480 de 2011", "Producto terminado y Materia Prima"),
         ("Idioma en español (o rótulo complementario si es importado)",
          "Toda la información obligatoria debe estar en español; en importados, adherir rótulo complementario traducido.",
          "Resolución 5109/2005 Art. 4.4", "Producto terminado y Materia Prima")
@@ -102,11 +102,11 @@ CATEGORIAS = {
          "Conservar la información original e incluir responsable del reenvasado con dirección.",
          "Resolución 5109/2005 Art. 5.4", "Producto reenvasado"),
         ("Venta a granel o fraccionados",
-         "Exhibir información mínima mediante cartel/rótulo: denominación, ingredientes (si aplica), responsable, país de origen, "
-         "lote y fecha en envase inmediato.",
+         "Exhibir información mínima mediante rótulo: denominación, ingredientes (si aplica), responsable, país de origen, "
+         "lote y fecha en envase.",
          "Resolución 5109/2005 (principios de información al consumidor).", "Producto a granel"),
         ("Envases muy pequeños (limitación de espacio)",
-         "Usar medios complementarios (insertos/etiquetas adicionales) si el espacio no permite toda la información esencial.",
+         "En productos pequeños o difíciles de rotular, la información esencial se trasladará al empaque secundario.",
          "Resolución 5109/2005 Art. 4.3 y 4.4", "Producto terminado"),
         ("Multipacks o envases secundarios",
          "El envase secundario debe repetir la información esencial o referir claramente al envase primario.",
@@ -154,8 +154,8 @@ for categoria, items in CATEGORIAS.items():
                 
                 checklist_ingredientes = [
                     "Lista encabezada con la palabra “Ingredientes:”",
-                    "Ingredientes declarados en orden decreciente de peso y no se omiten ingredientes presentes en la formulación",
-                    "Aditivos alimentarios declarados  ej., Conservante (Sorbato de potasio)",
+                    "Ingredientes declarados en orden decreciente de peso y no se omiten ingredientes presentes en la formulación (Validar con Ficha Técnica)",
+                    "Aditivos alimentarios declarados  ej., Conservante (Sorbato de potasio) o Colorantes(naturales o artificiales)",
                     "Alérgenos declarados cuando aplique gluten (trigo/cebada/centeno/avena), huevo, leche (incl. lactosa), soya, maní, frutos secos, pescado, crustáceos, mostaza, apio, sésamo, sulfitos ≥10 mg/kg."
                 ]
                 
@@ -170,12 +170,11 @@ for categoria, items in CATEGORIAS.items():
             st.markdown("#### Mini checklist — Verificación INVIMA")
             checks_invima = {
                "Registro sanitario INVIMA impreso en el empaque de forma visible, legible e indeleble": False,
-               "Registro sanitario vigente y en estado ACTIVO según portal INVIMA": False,
+               "Registro sanitario vigente según portal INVIMA": False,
                "Marca declarada coincide con la registrada ante INVIMA (cuando aplique)": False,
-               "Nombre del producto coincide con la ficha del registro sanitario": False,
+               "Nombre del producto coincide con el nombre aprobado en el registro sanitario (incluye nombre de fantasia si aplica)": False,
                "Denominación del alimento corresponde a su verdadera naturaleza": False,
                "La marca o nombre de fantasía no sustituye la denominación del alimento": False,
-               "Denominación visible en la cara principal de exhibición": False,
                "Presentaciones comerciales coinciden con las autorizadas en el registro": False,
             }
             
