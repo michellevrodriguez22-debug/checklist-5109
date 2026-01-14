@@ -98,13 +98,13 @@ CATEGORIAS = {
          "Resolución 5109/2005 Art. 5.9.1 y 5.9.2.", "Producto terminado y Materia Prima")
     ],
 
-    "9. Origen": 
+    "9. Origen": [
         ("País de origen",
          "Declarar “Hecho en …” cuando aplique.",
          "Resolución 5109/2005 Art. 5.4.2.", "Producto terminado y Materia Prima")
     ],
 
-    "10. Idioma":       
+    "10. Idioma": [   
         ("Idioma en español (o rótulo complementario si es importado)",
          "Toda la información obligatoria debe estar en español; en importados, adherir rótulo complementario traducido.",
          "Resolución 5109/2005 Art. 4.4", "Producto terminado y Materia Prima")
