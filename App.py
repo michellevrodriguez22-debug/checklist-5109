@@ -93,7 +93,7 @@ CATEGORIAS = {
     ],
 
     "8. Condiciones de Conservación": [
-         (­,
+         ("‎ ",
          "Declarar condiciones especiales de conservación para preservar inocuidad y vida útil (p. ej., refrigeración a 4 °C).",
          "Resolución 5109/2005 Art. 5.9.1 y 5.9.2.", "Producto terminado y Materia Prima")
     ],
