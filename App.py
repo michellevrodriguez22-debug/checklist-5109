@@ -187,7 +187,6 @@ for categoria, items in CATEGORIAS.items():
                "Marca declarada coincide con la registrada ante INVIMA (cuando aplique)": False,
                "Nombre del producto coincide con el nombre aprobado en el registro sanitario (incluye nombre de fantasia si aplica)": False,
                "Denominación del alimento corresponde a su verdadera naturaleza": False,
-               "La marca o nombre de fantasía no sustituye la denominación del alimento": False,
                "Presentaciones comerciales coinciden con las autorizadas en el registro": False,
             }
             
