@@ -66,23 +66,14 @@ CATEGORIAS = {
 
     "4. Información del fabricante y distribuidor": [ 
         ("Nombre y dirección del responsable (fabricante / importador / reenvasador)",
-         "Que se Declare la razón social y la dirección completa del responsable del alimento, de forma clara y legible. Utilizar exactamente las expresiones establecidas en la normativa según corresponda: “FABRICADO o ENVASADO POR”, o “FABRICADO, ENVASADO O REEMPACADO POR (FABRICANTE, ENVASADOR O REEMPACADOR) PARA: (PERSONA NATURAL O JURÍDICA AUTORIZADA PARA COMERCIALIZAR EL ALIMENTO)”. Para **producto terminado**, verificar que declare información de contacto como teléfono, correo electrónico u otros datos de contacto del proveedor o fabricante.",
+         "Verificar con mini checklis",
          "Resolución 5109 de 2005, Art. 5.3; Ley 1480 de 2011", "Producto terminado y Materia Prima")
     ],
 
-    "5. Identificación del lote": [
-        ("Lote impreso en el empaque (trazabilidad)",
-         "Que este impreso, legible e indeleble. Ejemplos de formato válido (referenciales): "
-         "L230401, LOTE230401",
+    "5. Identificación del lote y fecha de vencimiento": [
+        ("Lote y fecha de vencimiento",
+         "Para ambos casos verificar que diga lote y fecha de vencimiento impresa en el empaque",
          "Resolución 5109/2005 Art. 5.5", "Producto terminado y Materia Prima")
-    ],
-    "6. Fecha de Vencimiento": [
-        ("Fecha de vencimiento o duración mínima impresa",
-         "Que sea clara, legible y se encuentre en el empaque. Ejemplos de formato válido (según caso): "
-         "DD/MM/AAAA, DD-MM-AAAA, o MMM/AAAA (para alimentos con más de 3 meses de vida util). "
-         "Fecha límite de consumo recomendada, Fecha de caducidad, Fecha de vencimiento (F. Vto.), "
-         "Vence (Ven.), Expira (Exp.), Consumase antes de.",
-         "Resolución 5109/2005 Art. 5.5.", "Producto terminado y Materia Prima")
     ],
 
     "7. Instrucciones de Uso": [
@@ -94,7 +85,7 @@ CATEGORIAS = {
 
     "8. Condiciones de Conservación": [
          ("‎ ",
-         "Declarar condiciones especiales de conservación para preservar inocuidad y vida útil (p. ej., refrigeración a 4 °C).",
+         "Declarar condiciones especiales de conservación para preservar inocuidad y vida útil (p. ej., refrigeración a 0-4 °C, almacenece a temperatura ambiente, etc).",
          "Resolución 5109/2005 Art. 5.9.1 y 5.9.2.", "Producto terminado y Materia Prima")
     ],
 
@@ -108,22 +99,6 @@ CATEGORIAS = {
         ("Idioma en español (o rótulo complementario si es importado)",
          "Toda la información obligatoria debe estar en español; en importados, adherir rótulo complementario traducido.",
          "Resolución 5109/2005 Art. 4.4", "Producto terminado y Materia Prima")
-    ],
-
-    "11. Condiciones particulares": [
-        ("Producto reenvasado (establecimiento autorizado)",
-         "Conservar la información original e incluir responsable del reenvasado con dirección.",
-         "Resolución 5109/2005 Art. 5.4", "Producto reenvasado"),
-        ("Venta a granel o fraccionados",
-         "Exhibir información mínima mediante rótulo: denominación, ingredientes (si aplica), responsable, país de origen, "
-         "lote y fecha en envase.",
-         "Resolución 5109/2005 (principios de información al consumidor).", "Producto a granel"),
-        ("Envases muy pequeños (limitación de espacio)",
-         "En productos pequeños o difíciles de rotular, la información esencial se trasladará al empaque secundario.",
-         "Resolución 5109/2005 Art. 4.3 y 4.4", "Producto terminado"),
-        ("Multipacks o envases secundarios",
-         "El envase secundario debe repetir la información esencial o referir claramente al envase primario.",
-         "Criterio práctico de información al consumidor.", "Producto terminado"),
     ],
 }
 
@@ -161,6 +136,20 @@ for categoria, items in CATEGORIAS.items():
         st.markdown(f"**Referencia normativa:** {referencia}")
         st.caption(f"Aplica a: {aplica}")
 
+        if titulo == "Lote y fecha de vencimiento":
+            st.markdown("#### Mini checklist — Identificación del lote y fecha de vencimiento")
+            checks_lote_fv = {
+                "Lote impreso en el empaque, legible, visible e indeleble, que permite la trazabilidad del producto (ej.: L230401, LOTE230401)": False,
+                "Fecha de vencimiento o duración mínima impresa, clara, legible e indeleble, con formato permitido y denominación válida (Vence, Expira, Consumase antes de, etc.)": False,
+            }
+            
+            for check in checks_lote_fv:
+                checks_lote_fv[check] = st.checkbox(
+                    check,
+                    key=f"lote_fv_{check}"
+                )
+
+
         if titulo == "Lista de ingredientes, aditivos y declaración de alérgenos":
             
             with st.expander("Checklist verificación — Ingredientes", expanded=False):
@@ -195,6 +184,24 @@ for categoria, items in CATEGORIAS.items():
                     check,
                     key=f"invima_{check}"
                 )
+
+        if titulo == "Nombre y dirección del responsable (fabricante / importador / reenvasador)":
+            st.markdown("#### Mini checklist — Información del responsable del alimento")
+            checklist_responsable = [
+                "Razón social del responsable del alimento declarada de forma clara y legible",
+                "Dirección completa del responsable declarada (incluye ciudad/municipio y país cuando aplique)",
+                "Uso correcto de la expresión normativa según corresponda: “FABRICADO POR”, “ENVASADO POR” o “FABRICADO, ENVASADO O REEMPACADO POR … PARA …”",
+                "Para producto terminado, se declara al menos un dato de contacto del responsable (teléfono, correo electrónico u otro medio)",
+                "Cuando el producto figure bajo la marca Juan Valdez, se verifica que la información del responsable corresponda a la Federación Nacional de Cafeteros de Colombia y que la marca sea declarada correctamente como marca registrada de la Federación Nacional de Cafeteros."
+    ]
+
+    for item in checklist_responsable:
+        st.checkbox(
+            item,
+            key=f"resp_{item}"
+        )
+
+
 
         if titulo == "Contenido neto en cara principal con unidades SI":
             st.markdown("#### Anexo — Altura mínima de números y letras del contenido neto (Res. 5109/2005)")
