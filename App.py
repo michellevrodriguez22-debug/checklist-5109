@@ -193,15 +193,13 @@ for categoria, items in CATEGORIAS.items():
                 "Uso correcto de la expresión normativa según corresponda: “FABRICADO POR”, “ENVASADO POR” o “FABRICADO, ENVASADO O REEMPACADO POR … PARA …”",
                 "Para producto terminado, se declara al menos un dato de contacto del responsable (teléfono, correo electrónico u otro medio)",
                 "Cuando el producto figure bajo la marca Juan Valdez, se verifica que la información del responsable corresponda a la Federación Nacional de Cafeteros de Colombia y que la marca sea declarada correctamente como marca registrada de la Federación Nacional de Cafeteros."
-    ]
-
-    for item in checklist_responsable:
-        st.checkbox(
-            item,
-            key=f"resp_{item}"
-        )
-
-
+            ]
+            
+            for item in checklist_responsable:
+                st.checkbox(
+                    item,
+                    key=f"resp_{item}"
+                )
 
         if titulo == "Contenido neto en cara principal con unidades SI":
             st.markdown("#### Anexo — Altura mínima de números y letras del contenido neto (Res. 5109/2005)")
